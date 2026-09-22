@@ -417,6 +417,8 @@ body {
 .vendedor-chip.selected .icon { color: #1d4ed8; }
 .vendedor-chip.selected .chip-icon-off { display: none; }
 .vendedor-chip.selected .chip-icon-on { display: flex; }
+.vendedor-chip.vendedor-chip-fijo { cursor: default; }
+.vendedor-chip.vendedor-chip-fijo:active { transform: none; }
 .geo-status { font-size: 12px; padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
 .geo-status.ok { background: #f0fdf4; color: #166534; }
 .geo-status.pending { background: #eff6ff; color: #0369a1; }
@@ -431,6 +433,10 @@ body {
 .toast { position: fixed; bottom: 158px; left: 50%; transform: translateX(-50%); background: #0f1e33; color: white; padding: 12px 20px; border-radius: 50px; font-size: 13px; font-weight: 500; z-index: 1000; white-space: nowrap; animation: toastIn 0.3s ease; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
 @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 .modal-overlay.center { align-items: center; padding: 0 20px; }
+/* Este modal se abre ARRIBA de modal-task/modal-create-step2 (quedan atrás,
+   sin cerrarse), así que necesita un z-index más alto para no quedar tapado
+   por ellos aunque aparezca antes en el HTML. */
+#modal-confirm-hoy { z-index: 600; }
 .modal-center { width: 100%; max-width: 340px; background: white; border-radius: 20px; padding: 28px 24px; text-align: center; animation: scaleIn 0.2s cubic-bezier(0.16,1,0.3,1); }
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 .modal-center h3 { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 8px; }
@@ -452,6 +458,7 @@ body {
   margin: 0 auto 14px;
 }
 .icon-circle.danger { background: #fee2e2; color: #dc2626; }
+.icon-circle.warning { background: #fef3c7; color: #d97706; }
 .empty-state .icon { color: var(--border); margin-bottom: 14px; }
 .empty-state svg.icon { width: 46px; height: 46px; }
 .geo-status .icon { flex-shrink: 0; }
@@ -655,6 +662,19 @@ body {
     <div class="modal-buttons">
       <button class="btn-modal-cancel" onclick="closeModal('modal-delete')">Cancelar</button>
       <button class="btn-modal-confirm danger" id="btn-confirm-delete" onclick="confirmDelete()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: CONFIRMAR EVENTO PARA HOY (evita confusiones de fecha) ===== -->
+<div class="modal-overlay center" id="modal-confirm-hoy">
+  <div class="modal-center">
+    <div class="icon-circle warning"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+    <h3>Fecha - hora</h3>
+    <p>¿Estás seguro que querés hacer un evento para <strong>hoy</strong>?</p>
+    <div class="modal-buttons">
+      <button class="btn-modal-cancel" onclick="confirmarHoyNo()">Revisar fecha</button>
+      <button class="btn-modal-confirm" id="btn-confirm-hoy" onclick="confirmarHoySi()">Sí, es para hoy</button>
     </div>
   </div>
 </div>
@@ -1786,11 +1806,22 @@ function skipStep2() {
 }
 
 async function confirmCreateStep2() {
+  const inicio = document.getElementById('step2-inicio').value;
+  const fin = document.getElementById('step2-fin').value;
+  if (!inicio || !fin) { showToast('Elegí fecha y hora.'); return; }
+
+  if (esFechaDeHoy(inicio)) {
+    pedirConfirmacionHoy(() => guardarReunionReal());
+    return;
+  }
+  await guardarReunionReal();
+}
+
+async function guardarReunionReal() {
   const clienteId = document.getElementById('step2-cliente-id').value;
   const inicio = document.getElementById('step2-inicio').value;
   const fin = document.getElementById('step2-fin').value;
   const vendedoresSeleccionados = getCheckedVendedores('step2-vendedores-list');
-  if (!inicio || !fin) { showToast('Elegí fecha y hora.'); return; }
 
   const btn = document.getElementById('btn-confirm-step2');
   const original = setBtnLoading(btn, 'Agendando...');
@@ -1926,18 +1957,34 @@ function renderTaskClienteSelected(nombre) {
 // claro (fondo celeste + tilde + texto en negrita) y no depende del estilo
 // de checkbox de cada navegador/celular, que era lo que generaba la confusion
 // de "se prende y se apaga y no se sabe si quedo marcado".
+
+// "El gran hermano" 👁️: este usuario queda SIEMPRE asignado a toda tarea,
+// sin importar quién la esté creando ni a quién más se asigne. Así siempre
+// hay al menos un email válido en la lista y el evento de Calendar se crea
+// sí o sí (crearEventoCalendar en Codigo.gs devuelve vacío si no hay ningún
+// email adjunto, que era el "ordeal" que estaba pasando).
+const USUARIO_FIJO_TAREAS = 'juan';
+
 function renderVendedorCheckboxes(containerId, preseleccionados) {
   const el = document.getElementById(containerId);
   if (!vendedores.length) { el.innerHTML = '<p class="form-hint">No hay vendedores cargados en la hoja "users".</p>'; return; }
-  el.innerHTML = `<div class="vendedor-chip-group">` + vendedores.map(v => `
-    <button type="button" class="vendedor-chip${preseleccionados && preseleccionados.indexOf(v.username) !== -1 ? ' selected' : ''}" data-username="${v.username}" onclick="toggleVendedorChip(this)">
+  el.innerHTML = `<div class="vendedor-chip-group">` + vendedores.map(v => {
+    const esFijo = v.username === USUARIO_FIJO_TAREAS;
+    const seleccionado = esFijo || (preseleccionados && preseleccionados.indexOf(v.username) !== -1);
+    return `
+    <button type="button" class="vendedor-chip${seleccionado ? ' selected' : ''}${esFijo ? ' vendedor-chip-fijo' : ''}" data-username="${v.username}" data-fijo="${esFijo ? '1' : '0'}" onclick="toggleVendedorChip(this)">
       <span class="chip-icon-off">${icon('user', 18)}</span>
       <span class="chip-icon-on">${icon('checkCircle', 18)}</span>
-      <span>${v.nombreCompleto || v.username}</span>
-    </button>`).join('') + `</div>`;
+      <span>${v.nombreCompleto || v.username}${esFijo ? ' 👁️' : ''}</span>
+    </button>`;
+  }).join('') + `</div>`;
 }
 
 function toggleVendedorChip(el) {
+  if (el.dataset.fijo === '1') {
+    showToast('No podes sacar al gran hermano 👁️');
+    return;
+  }
   el.classList.toggle('selected');
 }
 
@@ -2200,12 +2247,24 @@ async function openTaskModal(t) {
 }
 
 async function confirmTask() {
+  const titulo = document.getElementById('task-titulo').value.trim();
+  const inicio = document.getElementById('task-inicio').value;
+  const fin = document.getElementById('task-fin').value;
+  if (!titulo || !inicio || !fin) { showToast('Completá título, inicio y fin.'); return; }
+
+  if (esFechaDeHoy(inicio)) {
+    pedirConfirmacionHoy(() => guardarTareaReal());
+    return;
+  }
+  await guardarTareaReal();
+}
+
+async function guardarTareaReal() {
   const id = document.getElementById('task-id').value;
   const titulo = document.getElementById('task-titulo').value.trim();
   const inicio = document.getElementById('task-inicio').value;
   const fin = document.getElementById('task-fin').value;
   const vendedoresSeleccionados = getCheckedVendedores('task-vendedores-list');
-  if (!titulo || !inicio || !fin) { showToast('Completá título, inicio y fin.'); return; }
 
   const payload = {
     titulo, tipo: document.getElementById('task-tipo').value,
@@ -2367,6 +2426,39 @@ function renderVendorStats(data) {
 // ==================== MODAL HELPERS ====================
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+// ==================== CONFIRMACION "ES PARA HOY?" ====================
+// La gente se confunde poniendo tareas/reuniones para hoy sin darse cuenta.
+// Antes de mandar el guardado real, si la fecha elegida es hoy, se frena acá
+// con un modal aparte (arriba del formulario, que sigue abierto atrás) y solo
+// se sigue si confirman. Nada de esto toca los otros resguardos (angry-clicks,
+// espera de 25s) que están adentro de la función que se termina llamando.
+function esFechaDeHoy(fechaHoraStr) {
+  if (!fechaHoraStr) return false;
+  const d = new Date(fechaHoraStr);
+  if (isNaN(d.getTime())) return false;
+  const hoy = new Date();
+  return d.getFullYear() === hoy.getFullYear() && d.getMonth() === hoy.getMonth() && d.getDate() === hoy.getDate();
+}
+
+let pendingConfirmacionHoy = null;
+
+function pedirConfirmacionHoy(callback) {
+  pendingConfirmacionHoy = callback;
+  openModal('modal-confirm-hoy');
+}
+
+function confirmarHoySi() {
+  closeModal('modal-confirm-hoy');
+  const cb = pendingConfirmacionHoy;
+  pendingConfirmacionHoy = null;
+  if (cb) cb();
+}
+
+function confirmarHoyNo() {
+  closeModal('modal-confirm-hoy');
+  pendingConfirmacionHoy = null;
+}
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(overlay.id); });
