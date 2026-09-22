@@ -964,7 +964,7 @@ body {
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxxpTlAqW53iPfjeo0g3Cv27QRUXhhJOCvazn0UB9i5xzxdO2crQ4Mm4qd2MC-S75Pb9Q/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyuZZW-W5zr_Stipy_pSIa45Q31mwlLO-nY0VlL6n7MyvJdfv6yTI-5rd79_uG9BLMaJg/exec";
 
 // ==================== ICONOS (SVG, estilo outline, sin emojis) ====================
 const ICONS = {
@@ -1162,14 +1162,11 @@ async function fetchClients(showLoading = false) {
   try {
     const res = await apiCall({ action: 'get' });
     if (res.status === 'success') {
+      // El backend ya trae los vendedores asignados de cada cliente en la misma
+      // respuesta (campo _vendedores), así que no hace falta pedirlos cliente
+      // por cliente: eso disparaba una llamada extra por cada cliente cargado
+      // y era lo que saturaba a Apps Script.
       clients = res.data || [];
-      // trae los vendedores asignados de cada cliente en paralelo
-      await Promise.all(clients.map(async c => {
-        try {
-          const r2 = await apiCall({ action: 'get_vendedores_cliente', clienteId: c['id'] });
-          c._vendedores = (r2.data || []).map(v => v.username);
-        } catch { c._vendedores = []; }
-      }));
       renderClients();
       const now = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
       ind.textContent = `Último sync: ${now}`;
