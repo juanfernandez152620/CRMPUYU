@@ -356,6 +356,7 @@ body {
 /* ===== STATS VIEW ===== */
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
 .stat-tile { background: white; border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow); text-align: center; }
+.stat-tile-wide { grid-column: 1 / -1; }
 .stat-tile .stat-num { font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 24px; color: var(--sky-dd); }
 .stat-tile .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
 .stats-section-title { font-size: 13px; font-weight: 700; color: var(--text); margin: 18px 0 10px; font-family: 'DM Sans', sans-serif; }
@@ -599,6 +600,27 @@ body {
 
     <!-- ===== VIEW: ESTADISTICAS ===== -->
     <div class="view" id="view-stats">
+      <div class="crm-quick-chips" id="stats-period-chips">
+        <button type="button" class="quick-chip selected" data-period="total" onclick="setStatsPeriod('total')">Total</button>
+        <button type="button" class="quick-chip" data-period="fecha" onclick="setStatsPeriod('fecha')">Fecha específica</button>
+        <button type="button" class="quick-chip" data-period="rango" onclick="setStatsPeriod('rango')">Rango de fechas</button>
+      </div>
+      <div class="form-row" id="stats-fecha-unica-row" style="display:none;">
+        <div class="form-group">
+          <label style="font-weight:500;font-size:11px;">Fecha</label>
+          <input type="date" id="stats-fecha-unica" onchange="loadStats()">
+        </div>
+      </div>
+      <div class="form-row" id="stats-rango-row" style="display:none;">
+        <div class="form-group">
+          <label style="font-weight:500;font-size:11px;">Desde</label>
+          <input type="date" id="stats-fecha-desde" onchange="loadStats()">
+        </div>
+        <div class="form-group">
+          <label style="font-weight:500;font-size:11px;">Hasta</label>
+          <input type="date" id="stats-fecha-hasta" onchange="loadStats()">
+        </div>
+      </div>
       <div class="stats-grid" id="stats-grid"></div>
       <div class="stats-section-title">Desempeño por vendedor</div>
       <div id="vendor-stats-container"></div>
@@ -783,7 +805,7 @@ body {
 
     <div class="modal-buttons">
       <button class="btn-modal-cancel" onclick="skipStep2()">Omitir por ahora</button>
-      <button class="btn-modal-confirm" onclick="confirmCreateStep2()">Agendar reunión</button>
+      <button class="btn-modal-confirm" id="btn-confirm-step2" onclick="confirmCreateStep2()">Agendar reunión</button>
     </div>
   </div>
 </div>
@@ -828,7 +850,7 @@ body {
 
     <div class="modal-buttons">
       <button class="btn-modal-cancel" onclick="closeModal('modal-create-step3')">Listo por ahora</button>
-      <button class="btn-modal-confirm" onclick="confirmStep3()">Guardar datos</button>
+      <button class="btn-modal-confirm" id="btn-confirm-step3" onclick="confirmStep3()">Guardar datos</button>
     </div>
   </div>
 </div>
@@ -886,7 +908,7 @@ body {
 
     <div class="modal-buttons">
       <button class="btn-modal-cancel" onclick="closeModal('modal-task')">Cerrar</button>
-      <button class="btn-modal-confirm" onclick="confirmTask()">Guardar tarea</button>
+      <button class="btn-modal-confirm" id="btn-confirm-task" onclick="confirmTask()">Guardar tarea</button>
     </div>
   </div>
 </div>
@@ -1116,6 +1138,24 @@ async function apiPost(payload) {
     body: JSON.stringify(payload)
   });
   return res.json();
+}
+
+// Evita los "angry clicks": deja un botón deshabilitado y con un spinner
+// mientras se está procesando una acción (crear/editar/eliminar), para que
+// no se pueda volver a apretar y disparar la misma acción varias veces
+// mientras se espera la respuesta. Guarda el contenido original del botón
+// para devolvérselo tal cual al terminar (haya salido bien o mal).
+function setBtnLoading(btn, busyText) {
+  if (!btn) return null;
+  const original = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span>${busyText || ''}`;
+  return original;
+}
+function restoreBtn(btn, original) {
+  if (!btn) return;
+  btn.disabled = false;
+  if (original !== null && original !== undefined) btn.innerHTML = original;
 }
 
 // ==================== NAV ENTRE VISTAS ====================
@@ -1737,8 +1777,10 @@ async function confirmCreateStep2() {
   const vendedoresSeleccionados = getCheckedVendedores('step2-vendedores-list');
   if (!inicio || !fin) { showToast('Elegí fecha y hora.'); return; }
 
+  const btn = document.getElementById('btn-confirm-step2');
+  const original = setBtnLoading(btn, 'Agendando...');
   try {
-    await apiPost({
+    const res = await apiPost({
       action: 'crear_tarea',
       titulo: 'Reunión — ' + document.getElementById('step2-cliente-nombre').textContent,
       tipo: 'Reunion',
@@ -1749,10 +1791,15 @@ async function confirmCreateStep2() {
       notas: document.getElementById('step2-notas').value.trim(),
       creadoPor: currentUser
     });
-    showToast('Reunión agendada.');
+    if (res.data && res.data.calendarError) {
+      showToast('Reunión agendada, pero no se pudo enviar la invitación de Calendar.');
+    } else {
+      showToast('Reunión agendada. Se envió la invitación de Calendar.');
+    }
     closeModal('modal-create-step2');
     openCreateStep3(clienteId);
   } catch { showToast('No se pudo agendar la reunión.'); }
+  finally { restoreBtn(btn, original); }
 }
 
 // ==================== ALTA RAPIDA - PASO 3 (DATOS OPCIONALES) ====================
@@ -1787,6 +1834,8 @@ async function confirmStep3() {
   attrs['Prioridad'] = step3Values.prioridad;
   attrs['Tipo de Lead'] = step3Values.tipoLead;
 
+  const btn = document.getElementById('btn-confirm-step3');
+  const original = setBtnLoading(btn, 'Guardando...');
   try {
     await apiPost({ action: 'general_edit', id, ClientAtributes: attrs });
     if (referente) await updateReferente(id, referente);
@@ -1794,6 +1843,7 @@ async function confirmStep3() {
     showToast('Datos guardados');
     await fetchClients(false);
   } catch { showToast('Error al guardar los datos.'); }
+  finally { restoreBtn(btn, original); }
 }
 
 async function updateReferente(id, referente) {
@@ -2056,20 +2106,22 @@ function renderTaskCard(t) {
       ${t['Estado'] !== 'Cancelada' ? `
       <div class="task-actions">
         <button class="btn-card btn-edit" onclick='openTaskModal(${JSON.stringify(t).replace(/'/g,"&#39;")})'>${icon('edit', 14)} Editar</button>
-        ${t['Estado'] !== 'Hecha' ? `<button class="btn-card btn-next-stage" onclick="marcarTareaHecha('${t['id']}')">${icon('check', 14)} Hecha</button>` : ''}
-        <button class="btn-card btn-delete" onclick="cancelarTarea('${t['id']}')">${icon('trash', 15)}</button>
+        ${t['Estado'] !== 'Hecha' ? `<button class="btn-card btn-next-stage" onclick="marcarTareaHecha('${t['id']}', this)">${icon('check', 14)} Hecha</button>` : ''}
+        <button class="btn-card btn-delete" onclick="cancelarTarea('${t['id']}', this)">${icon('trash', 15)}</button>
       </div>` : ''}
     </div>`;
 }
 
-async function marcarTareaHecha(id) {
+async function marcarTareaHecha(id, btn) {
+  const original = setBtnLoading(btn, '');
   try { await apiPost({ action: 'editar_tarea', id, estado: 'Hecha' }); showToast('Tarea marcada como hecha'); refreshCalendarActiveTab(); }
-  catch { showToast('Error al actualizar.'); }
+  catch { showToast('Error al actualizar.'); restoreBtn(btn, original); }
 }
 
-async function cancelarTarea(id) {
+async function cancelarTarea(id, btn) {
+  const original = setBtnLoading(btn, '');
   try { await apiPost({ action: 'eliminar_tarea', id }); showToast('Tarea cancelada'); refreshCalendarActiveTab(); }
-  catch { showToast('Error al cancelar.'); }
+  catch { showToast('Error al cancelar.'); restoreBtn(btn, original); }
 }
 
 async function openTaskModal(t) {
@@ -2132,6 +2184,8 @@ async function confirmTask() {
     notas: document.getElementById('task-notas').value.trim()
   };
 
+  const btn = document.getElementById('btn-confirm-task');
+  const original = setBtnLoading(btn, 'Guardando...');
   try {
     if (id) {
       payload.id = id;
@@ -2142,19 +2196,80 @@ async function confirmTask() {
       payload.creadoPor = currentUser;
       const res = await apiPost({ action: 'crear_tarea', ...payload });
       if (res.status !== 'success') throw new Error(res.data || 'Error desconocido');
-      showToast('Tarea creada');
+      // La tarea se guarda igual aunque falle el envío del evento de Calendar;
+      // si eso pasó, avisamos pero no lo tratamos como un error de guardado.
+      if (res.data && res.data.calendarError) {
+        showToast('Tarea creada, pero no se pudo enviar la invitación de Calendar.');
+      } else {
+        showToast('Tarea creada, invitación enviada');
+      }
     }
     closeModal('modal-task');
     refreshCalendarActiveTab();
   } catch (e) {
     showToast('No se pudo guardar la tarea: ' + (e.message || 'error desconocido'));
+  } finally {
+    restoreBtn(btn, original);
   }
 }
 
 // ==================== ESTADISTICAS ====================
+// Filtro de período para "cuántos clientes tomamos como leads en tal
+// tiempo": se calcula del lado del navegador con los clientes que ya están
+// cargados (misma fecha de ingreso que usan los filtros del CRM), así no
+// hace falta tocar el backend para esto.
+let statsPeriod = 'total';
+
+function setStatsPeriod(period) {
+  statsPeriod = period;
+  document.querySelectorAll('#stats-period-chips .quick-chip').forEach(b => {
+    b.classList.toggle('selected', b.dataset.period === period);
+  });
+  document.getElementById('stats-fecha-unica-row').style.display = period === 'fecha' ? 'flex' : 'none';
+  document.getElementById('stats-rango-row').style.display = period === 'rango' ? 'flex' : 'none';
+  loadStats();
+}
+
+// Cuenta cuántos clientes activos tienen su fecha de ingreso dentro del
+// período elegido ("total" = todos, sin filtrar).
+function countLeadsEnPeriodo() {
+  if (!Array.isArray(clients) || !clients.length) return 0;
+
+  if (statsPeriod === 'fecha') {
+    const val = document.getElementById('stats-fecha-unica').value;
+    if (!val) return clients.length;
+    const target = new Date(val + 'T00:00:00');
+    return clients.filter(c => {
+      const d = getIngresoDate(c);
+      return d && d.getFullYear() === target.getFullYear() && d.getMonth() === target.getMonth() && d.getDate() === target.getDate();
+    }).length;
+  }
+
+  if (statsPeriod === 'rango') {
+    const desdeVal = document.getElementById('stats-fecha-desde').value;
+    const hastaVal = document.getElementById('stats-fecha-hasta').value;
+    if (!desdeVal && !hastaVal) return clients.length;
+    const desde = desdeVal ? new Date(desdeVal + 'T00:00:00') : null;
+    const hasta = hastaVal ? new Date(hastaVal + 'T23:59:59') : null;
+    return clients.filter(c => {
+      const d = getIngresoDate(c);
+      if (!d) return false;
+      if (desde && d < desde) return false;
+      if (hasta && d > hasta) return false;
+      return true;
+    }).length;
+  }
+
+  return clients.length; // total
+}
+
 async function loadStats() {
   document.getElementById('stats-grid').innerHTML = '<div class="skeleton-card"></div>';
   try {
+    // Para poder contar leads por fecha de ingreso necesitamos la lista de
+    // clientes cargada; si todavía no se pidió (por ejemplo, se entró
+    // directo a Estadísticas sin pasar antes por el CRM), la pedimos ahora.
+    if (!clients.length) await fetchClients(false);
     const statsRes = await apiGet('get_stats');
     renderStatsGrid(statsRes.data);
     renderVendorStats(statsRes.data);
@@ -2168,12 +2283,14 @@ function renderStatsGrid(data) {
   const clientesGanados = (data.porEstado || {})['Cliente'] || 0;
   const enFiltro = (data.porFase || {})['Filtro'] || 0;
   const enNegociacion = (data.porFase || {})['Negociación'] || 0;
+  const leadsPeriodo = countLeadsEnPeriodo();
 
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-tile"><div class="stat-num">${totalClientes}</div><div class="stat-label">Activos</div></div>
     <div class="stat-tile"><div class="stat-num">${clientesGanados}</div><div class="stat-label">Clientes</div></div>
     <div class="stat-tile"><div class="stat-num">${enFiltro}</div><div class="stat-label">En Filtro</div></div>
     <div class="stat-tile"><div class="stat-num">${enNegociacion}</div><div class="stat-label">En Negociación</div></div>
+    <div class="stat-tile stat-tile-wide"><div class="stat-num">${leadsPeriodo}</div><div class="stat-label">Leads captados en el período elegido</div></div>
   `;
 }
 
