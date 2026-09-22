@@ -964,7 +964,10 @@ body {
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwb6w-6MYT7jaLmtE__UNbJaAPuxPIovh1329MeI5d_i-vSc1n1k3hhSFK0e-p0aBaBbg/exec";
+// IMPORTANTE: reemplazar por la URL /exec del NUEVO proyecto de Apps Script
+// (el que se crea desde Extensions > Apps Script dentro de la planilla nueva,
+// no un proyecto standalone) una vez que lo despliegues como Web App.
+const API_URL = "https://script.google.com/macros/s/AKfycbzof6Sk5TzHJVHmfleLxAbix3FGhh6Pgglae7nF0V74vkBwvTafaqXOguwPbItgkHLF/exec";
 
 // ==================== ICONOS (SVG, estilo outline, sin emojis) ====================
 const ICONS = {
@@ -1041,7 +1044,7 @@ async function doLogin() {
   errEl.style.display = 'none';
 
   try {
-    const res = await apiCall({ action: 'login', username, password });
+    const res = await apiPost({ action: 'login', username, password });
     if (res.status === 'success' && res.code === 200) {
       currentUser = username;
       localStorage.setItem('puyu_user', username);
@@ -1097,9 +1100,18 @@ function showMainScreen() {
 })();
 
 // ==================== API ====================
-async function apiCall(payload) {
+// Misma arquitectura que el resto de tus apps (lecturas por GET, escrituras
+// por POST) para que el comportamiento frente a Google/Vercel sea idéntico
+// al de los proyectos que nunca te dieron problemas de CORS.
+async function apiGet(action, params) {
+  const qs = new URLSearchParams(Object.assign({ action }, params || {})).toString();
+  const res = await fetch(`${API_URL}?${qs}`, { redirect: 'follow' });
+  return res.json();
+}
+async function apiPost(payload) {
   const res = await fetch(API_URL, {
     method: 'POST',
+    redirect: 'follow',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(payload)
   });
@@ -1141,7 +1153,7 @@ function refreshCalendarActiveTab() {
 // ==================== VENDEDORES ====================
 async function loadVendedores() {
   try {
-    const res = await apiCall({ action: 'get_vendedores' });
+    const res = await apiGet('get_vendedores');
     if (res.status === 'success') vendedores = res.data || [];
   } catch (e) {}
 }
@@ -1160,7 +1172,7 @@ async function fetchClients(showLoading = false) {
     renderSkeletons();
   }
   try {
-    const res = await apiCall({ action: 'get' });
+    const res = await apiGet('get_clientes');
     if (res.status === 'success') {
       // El backend ya trae los vendedores asignados de cada cliente en la misma
       // respuesta (campo _vendedores), así que no hace falta pedirlos cliente
@@ -1500,7 +1512,7 @@ async function confirmStage() {
   const payload = { action, id };
   if (action !== 'edit_cliente') payload.nota = nota;
   try {
-    await apiCall(payload);
+    await apiPost(payload);
     closeModal('modal-stage');
     showToast('Etapa actualizada');
     await fetchClients(false);
@@ -1554,7 +1566,7 @@ async function agregarVendedorAFicha() {
   const username = document.getElementById('edit-add-vendedor-select').value;
   if (!username) return;
   try {
-    await apiCall({ action: 'asignar_vendedor', clienteId, username, rolEnCuenta: 'Secundario' });
+    await apiPost({ action: 'asignar_vendedor', clienteId, username, rolEnCuenta: 'Secundario' });
     currentEditClient._vendedores = currentEditClient._vendedores || [];
     if (currentEditClient._vendedores.indexOf(username) === -1) currentEditClient._vendedores.push(username);
     renderVendedoresFicha(currentEditClient._vendedores);
@@ -1565,7 +1577,7 @@ async function agregarVendedorAFicha() {
 async function quitarVendedorDeFicha(username) {
   const clienteId = document.getElementById('edit-client-id').value;
   try {
-    await apiCall({ action: 'quitar_vendedor', clienteId, username });
+    await apiPost({ action: 'quitar_vendedor', clienteId, username });
     currentEditClient._vendedores = (currentEditClient._vendedores || []).filter(u => u !== username);
     renderVendedoresFicha(currentEditClient._vendedores);
     showToast('Vendedor quitado');
@@ -1579,7 +1591,7 @@ async function actualizarUbicacionFicha() {
   geoStatus.innerHTML = `${icon('mapPin', 16)} Buscando tu ubicación actual…`;
   try {
     const pos = await getCurrentPosition();
-    await apiCall({ action: 'actualizar_ubicacion', id: clienteId, lat: pos.coords.latitude, lng: pos.coords.longitude, gpsAccuracy: pos.coords.accuracy });
+    await apiPost({ action: 'actualizar_ubicacion', id: clienteId, lat: pos.coords.latitude, lng: pos.coords.longitude, gpsAccuracy: pos.coords.accuracy });
     geoStatus.className = 'geo-status ok';
     geoStatus.innerHTML = `${icon('mapPin', 16)} Ubicación actualizada (${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)})`;
     renderMiniMap(pos.coords.latitude, pos.coords.longitude);
@@ -1614,7 +1626,7 @@ async function confirmEdit() {
   });
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Guardando...';
   try {
-    await apiCall({ action: 'general_edit', id, ClientAtributes: attrs });
+    await apiPost({ action: 'general_edit', id, ClientAtributes: attrs });
     closeModal('modal-edit');
     showToast('Cliente actualizado');
     await fetchClients(false);
@@ -1633,7 +1645,7 @@ async function confirmDelete() {
   const btn = document.getElementById('btn-confirm-delete');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Eliminando...';
   try {
-    await apiCall({ action: 'eliminate', id: pendingDeleteId });
+    await apiPost({ action: 'eliminate', id: pendingDeleteId });
     closeModal('modal-delete');
     showToast('Cliente eliminado');
     await fetchClients(false);
@@ -1688,7 +1700,7 @@ async function confirmCreateStep1() {
   if (lastCapturedGeo) { payload.lat = lastCapturedGeo.lat; payload.lng = lastCapturedGeo.lng; payload.gpsAccuracy = lastCapturedGeo.gpsAccuracy; }
 
   try {
-    const res = await apiCall(payload);
+    const res = await apiPost(payload);
     closeModal('modal-create-step1');
     showToast('Cliente creado');
     const newId = res.data && res.data.id;
@@ -1726,7 +1738,7 @@ async function confirmCreateStep2() {
   if (!inicio || !fin) { showToast('Elegí fecha y hora.'); return; }
 
   try {
-    await apiCall({
+    await apiPost({
       action: 'crear_tarea',
       titulo: 'Reunión — ' + document.getElementById('step2-cliente-nombre').textContent,
       tipo: 'Reunion',
@@ -1737,7 +1749,7 @@ async function confirmCreateStep2() {
       notas: document.getElementById('step2-notas').value.trim(),
       creadoPor: currentUser
     });
-    showToast('Reunión agendada. Se envió la invitación de Calendar.');
+    showToast('Reunión agendada.');
     closeModal('modal-create-step2');
     openCreateStep3(clienteId);
   } catch { showToast('No se pudo agendar la reunión.'); }
@@ -1776,7 +1788,7 @@ async function confirmStep3() {
   attrs['Tipo de Lead'] = step3Values.tipoLead;
 
   try {
-    await apiCall({ action: 'general_edit', id, ClientAtributes: attrs });
+    await apiPost({ action: 'general_edit', id, ClientAtributes: attrs });
     if (referente) await updateReferente(id, referente);
     closeModal('modal-create-step3');
     showToast('Datos guardados');
@@ -1915,7 +1927,7 @@ async function renderMonthView() {
   gridEnd.setHours(23, 59, 59, 999);
 
   try {
-    const res = await apiCall({ action: 'get_tareas', desde: gridStart.toISOString(), hasta: gridEnd.toISOString() });
+    const res = await apiGet('get_tareas', { desde: gridStart.toISOString(), hasta: gridEnd.toISOString() });
     monthTareasCache = res.data || [];
   } catch (e) { monthTareasCache = []; }
 
@@ -1999,7 +2011,7 @@ async function renderAgenda() {
   }
 
   try {
-    const res = await apiCall({ action: 'get_tareas', desde: desde.toISOString(), hasta: hasta.toISOString() });
+    const res = await apiGet('get_tareas', { desde: desde.toISOString(), hasta: hasta.toISOString() });
     tareasCache = res.data || [];
     if (!tareasCache.length) {
       container.innerHTML = `<div class="empty-state">${icon('calendar', 46)}<p>No hay tareas en este rango.</p></div>`;
@@ -2051,12 +2063,12 @@ function renderTaskCard(t) {
 }
 
 async function marcarTareaHecha(id) {
-  try { await apiCall({ action: 'editar_tarea', id, estado: 'Hecha' }); showToast('Tarea marcada como hecha'); refreshCalendarActiveTab(); }
+  try { await apiPost({ action: 'editar_tarea', id, estado: 'Hecha' }); showToast('Tarea marcada como hecha'); refreshCalendarActiveTab(); }
   catch { showToast('Error al actualizar.'); }
 }
 
 async function cancelarTarea(id) {
-  try { await apiCall({ action: 'eliminar_tarea', id }); showToast('Tarea cancelada'); refreshCalendarActiveTab(); }
+  try { await apiPost({ action: 'eliminar_tarea', id }); showToast('Tarea cancelada'); refreshCalendarActiveTab(); }
   catch { showToast('Error al cancelar.'); }
 }
 
@@ -2123,20 +2135,14 @@ async function confirmTask() {
   try {
     if (id) {
       payload.id = id;
-      const res = await apiCall({ action: 'editar_tarea', ...payload });
+      const res = await apiPost({ action: 'editar_tarea', ...payload });
       if (res.status !== 'success') throw new Error(res.data || 'Error desconocido');
       showToast('Tarea actualizada');
     } else {
       payload.creadoPor = currentUser;
-      const res = await apiCall({ action: 'crear_tarea', ...payload });
+      const res = await apiPost({ action: 'crear_tarea', ...payload });
       if (res.status !== 'success') throw new Error(res.data || 'Error desconocido');
-      // La tarea se guarda igual aunque falle el envío del evento de Calendar;
-      // si eso pasó, avisamos pero no lo tratamos como un error de guardado.
-      if (res.data && res.data.calendarError) {
-        showToast('Tarea creada, pero no se pudo enviar la invitación de Calendar.');
-      } else {
-        showToast('Tarea creada, invitación enviada');
-      }
+      showToast('Tarea creada');
     }
     closeModal('modal-task');
     refreshCalendarActiveTab();
@@ -2149,7 +2155,7 @@ async function confirmTask() {
 async function loadStats() {
   document.getElementById('stats-grid').innerHTML = '<div class="skeleton-card"></div>';
   try {
-    const statsRes = await apiCall({ action: 'get_stats' });
+    const statsRes = await apiGet('get_stats');
     renderStatsGrid(statsRes.data);
     renderVendorStats(statsRes.data);
   } catch (e) {
