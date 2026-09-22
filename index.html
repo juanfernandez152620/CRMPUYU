@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>PUYU</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -104,7 +104,7 @@ body {
 
 .btn-primary {
   width: 100%; padding: 15px; background: linear-gradient(120deg, #0ea5e9, #38bdf8);
-  border: none; border-radius: var(--radius-sm); color: white; font-family: 'Syne', sans-serif;
+  border: none; border-radius: var(--radius-sm); color: white; font-family: 'DM Sans', sans-serif;
   font-weight: 700; font-size: 16px; cursor: pointer; letter-spacing: 0.03em;
   transition: opacity 0.2s, transform 0.1s;
 }
@@ -119,14 +119,15 @@ body {
   background: var(--grad-hero); border-radius: 0 0 28px 28px; box-shadow: 0 6px 24px rgba(3,105,161,0.25);
 }
 .header-title-bar {
-  padding: env(safe-area-inset-top, 16px) 18px 4px; display:flex; align-items:center; gap:10px;
+  padding: calc(4px + env(safe-area-inset-top, 0px)) 18px 4px; display:flex; align-items:center; gap:11px;
 }
-.header-title-bar svg { width: 30px; height: auto; }
-.header-title-bar svg path { stroke: #ffffff !important; }
-.header-title-bar h1 {
-  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.02em; color: #ffffff;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+.brand-badge {
+  width: 38px; height: 38px; border-radius: 12px; background: #ffffff; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(3,50,90,0.25);
 }
+.brand-badge svg { width: 22px; height: 22px; }
+.brand-name { font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.01em; color: #ffffff; line-height: 1.1; }
+.brand-tagline { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 9px; color: rgba(255,255,255,0.78); text-transform: uppercase; letter-spacing: 0.09em; margin-top: 1px; }
 .header-user-card {
   margin: 14px 16px 0; padding: 12px 14px; background: rgba(255,255,255,0.97); border-radius: 18px;
   display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-lg);
@@ -134,7 +135,7 @@ body {
 .header-user { display: flex; align-items: center; gap: 10px; }
 .user-avatar {
   width: 38px; height: 38px; border-radius: 50%; background: var(--grad-brand);
-  display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif;
+  display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif;
   font-weight: 700; font-size: 15px; color: white; box-shadow: 0 3px 10px rgba(14,165,233,0.35);
 }
 .user-name { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.15; }
@@ -166,7 +167,7 @@ body {
   color: var(--text-muted); cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, color 0.2s, transform 0.15s;
 }
 .nav-btn:active { transform: scale(0.95); }
-.nav-btn .nav-icon { font-size: 18px; }
+.nav-btn .nav-icon { width: 20px; height: 20px; }
 .nav-btn.active { color: white; background: var(--grad-brand); box-shadow: 0 4px 14px rgba(14,165,233,0.4); }
 
 /* ===== CALENDAR / AGENDA VIEW ===== */
@@ -177,7 +178,7 @@ body {
 }
 .agenda-date-picker { flex: 1; text-align: center; }
 .agenda-date-picker input {
-  border: none; background: none; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
+  border: none; background: none; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px;
   color: var(--text); text-align: center; width: 100%;
 }
 .agenda-mode-toggle { display: flex; gap: 6px; margin-bottom: 14px; }
@@ -190,14 +191,14 @@ body {
 /* ===== CALENDARIO: TABS AGENDA / MES ===== */
 .calendar-tabs { display: flex; gap: 6px; background: white; border-radius: 18px; padding: 5px; margin-bottom: 16px; box-shadow: var(--shadow); }
 .calendar-tab {
-  flex: 1; border: none; background: none; padding: 11px; border-radius: 13px; font-family: 'Syne', sans-serif;
+  flex: 1; border: none; background: none; padding: 11px; border-radius: 13px; font-family: 'DM Sans', sans-serif;
   font-weight: 700; font-size: 13px; color: var(--text-muted); cursor: pointer; transition: all 0.2s;
 }
 .calendar-tab.active { background: var(--grad-brand); color: white; box-shadow: 0 4px 14px rgba(14,165,233,0.35); }
 
 /* ===== CALENDARIO: VISTA MES ===== */
 .month-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-.month-title { flex: 1; text-align: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; color: var(--text); text-transform: capitalize; }
+.month-title { flex: 1; text-align: center; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 16px; color: var(--text); text-transform: capitalize; }
 .month-today-chip {
   padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: white;
   font-size: 11px; font-weight: 700; color: var(--sky-d); cursor: pointer; white-space: nowrap;
@@ -223,10 +224,9 @@ body {
 .month-day-count { position: absolute; top: 3px; right: 5px; font-size: 8px; font-weight: 800; color: var(--sky-dd); }
 .month-day.selected .month-day-count { color: white; }
 .month-selected-header {
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; color: var(--text);
   margin: 20px 0 10px; text-transform: capitalize; display: flex; align-items: center; gap: 6px;
 }
-.month-selected-header::before { content: '📌'; font-size: 13px; }
 
 .task-card {
   background: white; border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow);
@@ -235,7 +235,7 @@ body {
 .task-card.estado-hecha { border-left-color: #22c55e; opacity: 0.7; }
 .task-card.estado-cancelada { border-left-color: #f43f5e; opacity: 0.5; text-decoration: line-through; }
 .task-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-.task-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; }
+.task-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; }
 .task-time { font-size: 11px; color: var(--sky-dd); font-weight: 600; white-space: nowrap; }
 .task-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
 .task-vendedores { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
@@ -244,6 +244,66 @@ body {
   font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
   color: var(--text-muted); margin: 16px 0 8px;
 }
+
+/* ===== CRM TOOLBAR / FILTERS ===== */
+.crm-toolbar { display: flex; gap: 8px; margin-bottom: 10px; }
+.crm-search-wrap {
+  flex: 1; display: flex; align-items: center; gap: 8px; background: white; border-radius: 14px;
+  padding: 0 12px; box-shadow: var(--shadow); border: 1.5px solid transparent;
+}
+.crm-search-wrap:focus-within { border-color: var(--sky-d); }
+.crm-search-wrap .icon { color: var(--text-muted); flex-shrink: 0; }
+.crm-search-wrap input {
+  flex: 1; border: none; outline: none; background: transparent; font-family: 'DM Sans', sans-serif;
+  font-size: 14px; padding: 12px 0; color: var(--text);
+}
+.crm-search-wrap .btn-clear-search { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; padding: 4px; }
+.crm-filter-btn {
+  position: relative; display: flex; align-items: center; gap: 6px; background: white; border: none;
+  border-radius: 14px; padding: 0 16px; box-shadow: var(--shadow); font-family: 'DM Sans', sans-serif;
+  font-weight: 600; font-size: 13px; color: var(--text); cursor: pointer; flex-shrink: 0;
+}
+.crm-filter-btn.has-filters { background: var(--grad-brand); color: white; }
+.filter-count-badge {
+  position: absolute; top: -6px; right: -6px; background: #f43f5e; color: white; font-size: 10px;
+  font-weight: 700; border-radius: 50%; min-width: 18px; height: 18px; display: flex; align-items: center;
+  justify-content: center; padding: 0 3px; box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+.crm-quick-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.quick-chip {
+  display: flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 20px; border: 1.5px solid var(--border);
+  background: white; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 12.5px; color: var(--text-muted);
+  cursor: pointer; transition: all 0.15s;
+}
+.quick-chip.selected { border-color: var(--sky-d); background: var(--grad-brand); color: white; }
+.quick-chip .icon { flex-shrink: 0; }
+.chip-select-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-select {
+  padding: 9px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: white;
+  color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer;
+  transition: all 0.15s;
+}
+.chip-select.selected { border-color: var(--sky-d); background: #eff6ff; color: #1d4ed8; }
+.filter-panel-footer-note { font-size: 12px; color: var(--text-muted); margin: -4px 0 4px; }
+
+/* ===== CLIENT PICKER (buscador dentro de modales) ===== */
+.client-picker { position: relative; }
+.client-picker-results {
+  display: none; position: relative; margin-top: 6px; max-height: 220px; overflow-y: auto;
+  border-radius: 12px; border: 1.5px solid var(--border); background: white; box-shadow: var(--shadow);
+}
+.client-picker-item { padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
+.client-picker-item:last-child { border-bottom: none; }
+.client-picker-item:active { background: var(--filtro-bg); }
+.client-picker-item-name { font-weight: 600; font-size: 13.5px; color: var(--text); }
+.client-picker-item-sub { font-size: 12px; color: var(--text-muted); }
+.client-picker-empty { padding: 12px; font-size: 13px; color: var(--text-muted); text-align: center; }
+.client-picker-selected {
+  display: none; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px;
+  padding: 10px 12px; border-radius: 12px; background: var(--filtro-bg); border: 1.5px solid var(--filtro-border);
+}
+.client-picker-selected span { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13.5px; color: var(--text); }
+.client-picker-selected button { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; padding: 2px; }
 
 /* ===== CLIENT LIST (CRM) ===== */
 .clients-container { display: flex; flex-direction: column; gap: 12px; }
@@ -254,7 +314,7 @@ body {
 .client-card.fase-negociacion { background: var(--negociacion-bg); border-color: var(--negociacion-border); }
 .client-card.prioridad-vip { box-shadow: var(--shadow), 0 0 0 1px rgba(245,158,11,0.3), 0 0 16px rgba(245,158,11,0.1); }
 .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 8px; }
-.card-company { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.2; flex: 1; color: var(--text); }
+.card-company { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.2; flex: 1; color: var(--text); }
 .card-company.vip-name { background: linear-gradient(120deg, var(--gold1), var(--gold3), var(--gold2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .card-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
 .badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
@@ -296,23 +356,25 @@ body {
 /* ===== STATS VIEW ===== */
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
 .stat-tile { background: white; border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow); text-align: center; }
-.stat-tile .stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px; color: var(--sky-dd); }
+.stat-tile .stat-num { font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 24px; color: var(--sky-dd); }
 .stat-tile .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
-.stats-section-title { font-size: 13px; font-weight: 700; color: var(--text); margin: 18px 0 10px; font-family: 'Syne', sans-serif; }
+.stats-section-title { font-size: 13px; font-weight: 700; color: var(--text); margin: 18px 0 10px; font-family: 'DM Sans', sans-serif; }
 .vendor-row { background: white; border-radius: var(--radius-sm); padding: 12px 14px; box-shadow: var(--shadow); margin-bottom: 8px; }
 .vendor-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .vendor-row-name { font-weight: 700; font-size: 13px; }
 .vendor-row-stats { display: flex; gap: 12px; font-size: 11px; color: var(--text-muted); }
-#map-container { width: 100%; height: 260px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 16px; }
+.vendor-row-stats span { display: inline-flex; align-items: center; gap: 4px; }
+.vendor-row-stats .icon { flex-shrink: 0; }
 #mini-map { width: 100%; height: 160px; border-radius: var(--radius-sm); overflow: hidden; margin-top: 10px; }
 
 /* ===== FAB ===== */
 .fab {
   position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%);
   background: linear-gradient(120deg, #0ea5e9, #38bdf8); color: white; border: none; border-radius: 28px;
-  padding: 15px 26px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer;
+  padding: 15px 26px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer;
   box-shadow: 0 4px 20px rgba(14,165,233,0.4), 0 2px 8px rgba(0,0,0,0.15); z-index: 200; white-space: nowrap;
   transition: transform 0.15s; letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 7px;
 }
 .fab:active { transform: translateX(-50%) scale(0.96); }
 
@@ -323,11 +385,11 @@ body {
 .modal-sheet { width: 100%; max-width: 480px; background: white; border-radius: 24px 24px 0 0; padding: 24px 20px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .modal-handle { width: 40px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 20px; }
-.modal-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; color: var(--text); margin-bottom: 20px; }
+.modal-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 18px; color: var(--text); margin-bottom: 20px; }
 .modal-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
 .modal-buttons { display: flex; gap: 10px; margin-top: 24px; }
 .btn-modal-cancel { flex: 1; padding: 14px; border: 1.5px solid var(--border); border-radius: 12px; background: white; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; }
-.btn-modal-confirm { flex: 2; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(120deg, #0ea5e9, #38bdf8); color: white; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
+.btn-modal-confirm { flex: 2; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(120deg, #0ea5e9, #38bdf8); color: white; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
 .btn-modal-confirm.danger { background: linear-gradient(120deg, #f43f5e, #ef4444); }
 .btn-modal-confirm:active { opacity: 0.85; }
 .modal-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 18px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
@@ -340,13 +402,26 @@ body {
 .toggle-btn.selected.vip { border-color: var(--gold2); background: #fef9c3; color: #92400e; }
 .vendedor-check-row { display: flex; align-items: center; gap: 10px; padding: 10px 4px; border-bottom: 1px solid var(--border); }
 .vendedor-check-row input { width: 18px; height: 18px; }
+.vendedor-chip-group { display: flex; flex-direction: column; gap: 8px; }
+.vendedor-chip {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); background: white;
+  color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer;
+  transition: all 0.15s;
+}
+.vendedor-chip .icon { flex-shrink: 0; color: var(--border); }
+.vendedor-chip .chip-icon-on { display: none; }
+.vendedor-chip:active { transform: scale(0.98); }
+.vendedor-chip.selected { border-color: var(--sky-d); background: #eff6ff; color: #1d4ed8; }
+.vendedor-chip.selected .icon { color: #1d4ed8; }
+.vendedor-chip.selected .chip-icon-off { display: none; }
+.vendedor-chip.selected .chip-icon-on { display: flex; }
 .geo-status { font-size: 12px; padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
 .geo-status.ok { background: #f0fdf4; color: #166534; }
 .geo-status.pending { background: #eff6ff; color: #0369a1; }
 .geo-status.error { background: #fef2f2; color: #b91c1c; }
 
 .empty-state { text-align: center; padding: 60px 24px; color: var(--text-muted); }
-.empty-state .emoji { font-size: 48px; margin-bottom: 16px; }
 .empty-state p { font-size: 15px; line-height: 1.5; }
 .skeleton-card { background: white; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); animation: pulse 1.5s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
@@ -357,11 +432,30 @@ body {
 .modal-overlay.center { align-items: center; padding: 0 20px; }
 .modal-center { width: 100%; max-width: 340px; background: white; border-radius: 20px; padding: 28px 24px; text-align: center; animation: scaleIn 0.2s cubic-bezier(0.16,1,0.3,1); }
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-.modal-center .danger-icon { font-size: 40px; margin-bottom: 12px; }
-.modal-center h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 8px; }
+.modal-center h3 { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 17px; margin-bottom: 8px; }
 .modal-center p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px; }
 .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== ICON SYSTEM (SVG, sin emojis) ===== */
+.icon { width: 17px; height: 17px; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+.icon-sm { width: 13px; height: 13px; }
+.icon-lg { width: 26px; height: 26px; }
+.icon-xl { width: 34px; height: 34px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; }
+.card-info-row .icon { color: var(--sky-d); }
+.modal-title { display: flex; align-items: center; gap: 9px; }
+.modal-title .icon { color: var(--sky-d); }
+.icon-circle {
+  width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+}
+.icon-circle.danger { background: #fee2e2; color: #dc2626; }
+.empty-state .icon { color: var(--border); margin-bottom: 14px; }
+.empty-state svg.icon { width: 46px; height: 46px; }
+.geo-status .icon { flex-shrink: 0; }
+.calendar-tab { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.month-selected-header .icon { color: var(--sky-d); }
 
 @media (min-width: 481px) {
   body { background: #cbd5e1; }
@@ -387,7 +481,7 @@ body {
           </g>
           <polyline points="98,205 139,172 181,185 223,130 265,90" fill="none" stroke="#0369a1" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
           <g fill="#0369a1"><circle cx="98" cy="205" r="9"/><circle cx="139" cy="172" r="9"/><circle cx="181" cy="185" r="9"/><circle cx="223" cy="130" r="9"/><circle cx="265" cy="90" r="9"/></g>
-          <text x="200" y="345" text-anchor="middle" font-family="'Syne', Arial, sans-serif" font-weight="800" font-size="66" letter-spacing="3" fill="#0369a1">PUYU</text>
+          <text x="200" y="345" text-anchor="middle" font-family="'DM Sans', Arial, sans-serif" font-weight="800" font-size="66" letter-spacing="3" fill="#0369a1">PUYU</text>
         </svg>
         <p>Soluciones Empresariales</p>
       </div>
@@ -408,10 +502,18 @@ body {
   <div id="screen-main" class="screen">
     <div class="main-header">
       <div class="header-title-bar">
-        <svg viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 104 248 C 60 248 24 214 24 172 C 24 130 58 96 100 96 C 108 96 116 97 123 100 C 138 64 174 40 216 40 C 268 40 312 78 320 128 C 356 132 384 162 384 198 C 384 238 352 270 312 270 L 104 270 Z" fill="none" stroke="#0ea5e9" stroke-width="26"/>
-        </svg>
-        <h1>PUYU · Soluciones Empresariales</h1>
+        <div class="brand-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17.5a4.5 4.5 0 0 1-.5-8.97A5.5 5.5 0 0 1 17 8.06 4.5 4.5 0 0 1 16.5 17.5H7z"/>
+            <line x1="9.5" y1="14" x2="9.5" y2="16.5"/>
+            <line x1="12" y1="12.5" x2="12" y2="16.5"/>
+            <line x1="14.5" y1="13.5" x2="14.5" y2="16.5"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">PUYU</div>
+          <div class="brand-tagline">Soluciones Empresariales</div>
+        </div>
       </div>
       <div class="header-user-card">
         <div class="header-user">
@@ -422,8 +524,12 @@ body {
           </div>
         </div>
         <div class="header-actions">
-          <button class="btn-icon btn-refresh" title="Refrescar" onclick="refreshCurrentView()">⟳</button>
-          <button class="btn-icon btn-logout" title="Cerrar sesión" onclick="doLogout()">⏻</button>
+          <button class="btn-icon btn-refresh" title="Refrescar" onclick="refreshCurrentView()">
+            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          </button>
+          <button class="btn-icon btn-logout" title="Cerrar sesión" onclick="doLogout()">
+            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -431,8 +537,8 @@ body {
     <!-- ===== VIEW: CALENDARIO ===== -->
     <div class="view active" id="view-calendario">
       <div class="calendar-tabs">
-        <button class="calendar-tab active" id="caltab-agenda" onclick="setCalendarTab('agenda')">📋 Agenda</button>
-        <button class="calendar-tab" id="caltab-mes" onclick="setCalendarTab('mes')">🗓️ Mes</button>
+        <button class="calendar-tab active" id="caltab-agenda" onclick="setCalendarTab('agenda')"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> Agenda</button>
+        <button class="calendar-tab" id="caltab-mes" onclick="setCalendarTab('mes')"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Mes</button>
       </div>
 
       <div id="calendar-agenda-panel">
@@ -457,7 +563,7 @@ body {
           <button class="agenda-nav-btn" onclick="moveMonth(1)">›</button>
         </div>
         <div style="text-align:center; margin-bottom:14px;">
-          <button class="month-today-chip" onclick="goToTodayMonth()">📍 Hoy</button>
+          <button class="month-today-chip" onclick="goToTodayMonth()">Hoy</button>
         </div>
         <div class="month-weekdays"><span>D</span><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span></div>
         <div class="month-grid" id="month-grid"></div>
@@ -468,31 +574,52 @@ body {
 
     <!-- ===== VIEW: CRM ===== -->
     <div class="view" id="view-crm">
+      <div class="crm-toolbar">
+        <div class="crm-search-wrap">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="crm-search" placeholder="Buscar por nombre, teléfono, email, rubro..." oninput="applyClientFilters()">
+          <button class="btn-clear-search" id="crm-search-clear" style="display:none;" onclick="clearSearch()">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <button class="crm-filter-btn" id="crm-filter-btn" onclick="openFilterPanel()">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filtros
+          <span class="filter-count-badge" id="filter-count-badge" style="display:none;">0</span>
+        </button>
+      </div>
+      <div class="crm-quick-chips">
+        <button class="quick-chip" id="chip-mis-clientes" onclick="toggleMisClientes()">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Mis clientes
+        </button>
+      </div>
       <div class="clients-container" id="clients-container"></div>
     </div>
 
     <!-- ===== VIEW: ESTADISTICAS ===== -->
     <div class="view" id="view-stats">
       <div class="stats-grid" id="stats-grid"></div>
-      <div class="stats-section-title">📍 Mapa de clientes</div>
-      <div id="map-container"></div>
-      <div class="stats-section-title">👤 Desempeño por vendedor</div>
+      <div class="stats-section-title">Desempeño por vendedor</div>
       <div id="vendor-stats-container"></div>
     </div>
 
     <div class="bottom-nav">
       <button class="nav-btn active" id="nav-calendario" onclick="switchView('calendario')">
-        <span class="nav-icon">🗓️</span>Calendario
+        <svg class="icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendario
       </button>
       <button class="nav-btn" id="nav-crm" onclick="switchView('crm')">
-        <span class="nav-icon">👥</span>Clientes
+        <svg class="icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clientes
       </button>
       <button class="nav-btn" id="nav-stats" onclick="switchView('stats')">
-        <span class="nav-icon">📊</span>Estadísticas
+        <svg class="icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Estadísticas
       </button>
     </div>
 
-    <button class="fab" id="fab-btn" onclick="onFabClick()">+ Crear</button>
+    <button class="fab" id="fab-btn" onclick="onFabClick()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Crear</button>
   </div>
 
 </div>
@@ -500,7 +627,7 @@ body {
 <!-- ===== MODAL: DELETE CONFIRM ===== -->
 <div class="modal-overlay center" id="modal-delete">
   <div class="modal-center">
-    <div class="danger-icon">🗑️</div>
+    <div class="icon-circle danger"><svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></div>
     <h3>¿Estás muy seguro?</h3>
     <p>Querés eliminar a <strong id="delete-client-name"></strong>. Esta acción no se puede deshacer.</p>
     <div class="modal-buttons">
@@ -514,7 +641,7 @@ body {
 <div class="modal-overlay" id="modal-edit">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">✏️ Ficha de Cliente</div>
+    <div class="modal-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Ficha de Cliente</div>
     <input type="hidden" id="edit-client-id">
 
     <div class="modal-section-title">Datos</div>
@@ -560,7 +687,7 @@ body {
     <div class="modal-section-title">Ubicación</div>
     <div id="edit-geo-status" class="geo-status pending">Sin ubicación cargada.</div>
     <div id="edit-mini-map"></div>
-    <button class="btn-modal-cancel" style="margin-top:10px;" onclick="actualizarUbicacionFicha()">📍 Actualizar ubicación actual</button>
+    <button class="btn-modal-cancel" style="margin-top:10px; display:flex; align-items:center; justify-content:center; gap:7px;" onclick="actualizarUbicacionFicha()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Actualizar ubicación actual</button>
 
     <div class="modal-buttons">
       <button class="btn-modal-cancel" onclick="closeModal('modal-edit')">Cerrar</button>
@@ -573,7 +700,7 @@ body {
 <div class="modal-overlay" id="modal-stage">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="stage-modal-title">🚀 Avanzar Etapa</div>
+    <div class="modal-title" id="stage-modal-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> <span>Avanzar Etapa</span></div>
     <p class="modal-subtitle" id="stage-modal-subtitle"></p>
     <input type="hidden" id="stage-client-id">
     <input type="hidden" id="stage-action">
@@ -592,10 +719,10 @@ body {
 <div class="modal-overlay" id="modal-create-step1">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">✨ Nuevo Cliente — Paso 1</div>
+    <div class="modal-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/></svg> Nuevo Cliente — Paso 1</div>
     <p class="modal-subtitle">Lo mínimo para cargarlo ya. El resto lo completás después.</p>
 
-    <div id="create-geo-status" class="geo-status pending">📍 Buscando tu ubicación…</div>
+    <div id="create-geo-status" class="geo-status pending"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Buscando tu ubicación…</div>
 
     <div class="form-group">
       <label>Nombre de Contacto *</label>
@@ -631,7 +758,7 @@ body {
 <div class="modal-overlay" id="modal-create-step2">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">📅 Agendar próxima reunión</div>
+    <div class="modal-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Agendar próxima reunión</div>
     <p class="modal-subtitle">Cliente creado. ¿Cuándo es la próxima reunión con <strong id="step2-cliente-nombre"></strong>?</p>
     <input type="hidden" id="step2-cliente-id">
 
@@ -665,7 +792,7 @@ body {
 <div class="modal-overlay" id="modal-create-step3">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">🗂️ Completar más datos (opcional)</div>
+    <div class="modal-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Completar más datos (opcional)</div>
     <input type="hidden" id="step3-cliente-id">
 
     <div class="form-group">
@@ -684,14 +811,14 @@ body {
       <label>Prioridad</label>
       <div class="toggle-group">
         <button class="toggle-btn selected" id="step3-tog-normal" onclick="selectStep3Toggle('prioridad','Normal',this)">Normal</button>
-        <button class="toggle-btn" id="step3-tog-vip" onclick="selectStep3Toggle('prioridad','VIP',this,'vip')">⭐ VIP</button>
+        <button class="toggle-btn" id="step3-tog-vip" onclick="selectStep3Toggle('prioridad','VIP',this,'vip')">VIP</button>
       </div>
     </div>
     <div class="form-group">
       <label>Tipo de Lead</label>
       <div class="toggle-group">
-        <button class="toggle-btn selected" id="step3-tog-cold" onclick="selectStep3Toggle('tipoLead','Cold',this)">❄️ Cold</button>
-        <button class="toggle-btn" id="step3-tog-warm" onclick="selectStep3Toggle('tipoLead','Warm',this,'warm')">🔥 Warm/Inbound</button>
+        <button class="toggle-btn selected" id="step3-tog-cold" onclick="selectStep3Toggle('tipoLead','Cold',this)">Cold</button>
+        <button class="toggle-btn" id="step3-tog-warm" onclick="selectStep3Toggle('tipoLead','Warm',this,'warm')">Warm/Inbound</button>
       </div>
     </div>
     <div class="form-group">
@@ -710,7 +837,7 @@ body {
 <div class="modal-overlay" id="modal-task">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="task-modal-title">🗓️ Nueva Tarea</div>
+    <div class="modal-title" id="task-modal-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> <span>Nueva Tarea</span></div>
     <input type="hidden" id="task-id">
 
     <div class="form-group">
@@ -728,7 +855,15 @@ body {
     </div>
     <div class="form-group">
       <label>Cliente vinculado (opcional)</label>
-      <select id="task-cliente"><option value="">— Ninguno —</option></select>
+      <div class="client-picker" id="task-cliente-picker">
+        <div class="crm-search-wrap">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="task-cliente-search" placeholder="Buscar por nombre de empresa o contacto..." oninput="filterTaskClientResults()" onfocus="filterTaskClientResults()">
+        </div>
+        <div class="client-picker-results" id="task-cliente-results"></div>
+        <div class="client-picker-selected" id="task-cliente-selected"></div>
+        <input type="hidden" id="task-cliente" value="">
+      </div>
     </div>
     <div class="form-row">
       <div class="form-group">
@@ -741,7 +876,7 @@ body {
       </div>
     </div>
     <div class="form-group">
-      <label>Vendedores asignados</label>
+      <label>Vendedores asignados <span class="form-hint" style="font-weight:400;">(podés elegir más de uno)</span></label>
       <div id="task-vendedores-list"></div>
     </div>
     <div class="form-group">
@@ -756,8 +891,120 @@ body {
   </div>
 </div>
 
+<!-- ===== MODAL: FILTROS DE CLIENTES ===== -->
+<div class="modal-overlay" id="modal-filters">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg> <span>Filtrar clientes</span></div>
+
+    <div class="form-group">
+      <label>Vendedor</label>
+      <select id="filter-vendedor">
+        <option value="">Todos los vendedores</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Fase</label>
+      <div class="chip-select-group" id="filter-fase-group">
+        <button type="button" class="chip-select" data-val="filtro" onclick="toggleFilterChip(this)">Filtro</button>
+        <button type="button" class="chip-select" data-val="propuesta" onclick="toggleFilterChip(this)">Propuesta</button>
+        <button type="button" class="chip-select" data-val="negociacion" onclick="toggleFilterChip(this)">Negociación</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Estado</label>
+      <div class="chip-select-group" id="filter-estado-group">
+        <button type="button" class="chip-select" data-val="Lead" onclick="toggleFilterChip(this)">Lead</button>
+        <button type="button" class="chip-select" data-val="Cliente" onclick="toggleFilterChip(this)">Cliente</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Prioridad</label>
+      <div class="chip-select-group" id="filter-prioridad-group">
+        <button type="button" class="chip-select" data-val="VIP" onclick="toggleFilterChip(this)">VIP</button>
+        <button type="button" class="chip-select" data-val="Normal" onclick="toggleFilterChip(this)">Normal</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo de Lead</label>
+      <div class="chip-select-group" id="filter-tipolead-group">
+        <button type="button" class="chip-select" data-val="Warm" onclick="toggleFilterChip(this)">Warm/Inbound</button>
+        <button type="button" class="chip-select" data-val="Cold" onclick="toggleFilterChip(this)">Cold</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Rubro</label>
+      <div class="chip-select-group" id="filter-rubro-group"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Fecha de ingreso</label>
+      <div class="form-row">
+        <div class="form-group">
+          <label style="font-weight:500;font-size:11px;">Desde</label>
+          <input type="date" id="filter-fecha-desde">
+        </div>
+        <div class="form-group">
+          <label style="font-weight:500;font-size:11px;">Hasta</label>
+          <input type="date" id="filter-fecha-hasta">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="btn-modal-cancel" onclick="clearClientFilters()">Limpiar filtros</button>
+      <button class="btn-modal-confirm" onclick="confirmClientFilters()">Aplicar</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxHmZdOCjI9HGmZzQ0ezjoWIuZikN6bIRSz1lQ8F0fr8c5U4DZOPxYE57cgM0QS4zXzkw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxxpTlAqW53iPfjeo0g3Cv27QRUXhhJOCvazn0UB9i5xzxdO2crQ4Mm4qd2MC-S75Pb9Q/exec";
+
+// ==================== ICONOS (SVG, estilo outline, sin emojis) ====================
+const ICONS = {
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  list: '<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
+  users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  userPlus: '<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="17" y1="11" x2="23" y2="11"/>',
+  barChart: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+  refresh: '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
+  logOut: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+  plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  edit: '<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>',
+  trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  checkCircle: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+  mapPin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+  phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  mail: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/>',
+  tag: '<path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3.24L4 3a1 1 0 0 0-1 1l.24 5.59a2 2 0 0 0 .59 1.41l9.58 9.59a2 2 0 0 0 2.83 0l4.24-4.24a2 2 0 0 0 .11-2.94z"/><line x1="7.5" y1="7.5" x2="7.51" y2="7.5"/>',
+  briefcase: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+  alertTriangle: '<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  snowflake: '<line x1="12" y1="2" x2="12" y2="22"/><line x1="17" y1="5" x2="7" y2="19"/><line x1="7" y1="5" x2="17" y2="19"/><line x1="2" y1="12" x2="22" y2="12"/>',
+  zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  navigation: '<polygon points="3 11 22 2 13 21 11 13 3 11"/>',
+  fileText: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+  trendingUp: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+  folder: '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
+  inbox: '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  sun: '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>',
+  paperclip: '<path d="M21.44 11.05 12.25 20.24a5.5 5.5 0 0 1-7.78-7.78l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95L9.41 17.41a1.5 1.5 0 0 1-2.12-2.12l8.49-8.49"/>',
+  search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  filter: '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
+  x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'
+};
+function icon(name, size, cls) {
+  const s = size || 17;
+  return `<svg class="icon ${cls || ''}" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
+}
 
 let currentUser = null;
 let clients = [];
@@ -774,7 +1021,6 @@ let selectedMonthDay = new Date();
 let monthTareasCache = [];
 let step3Values = { prioridad: 'Normal', tipoLead: 'Cold' };
 let lastCapturedGeo = null;
-let statsLeafletMap = null;
 let miniLeafletMap = null;
 
 // ==================== AUTH ====================
@@ -909,7 +1155,7 @@ function nombreVendedor(username) {
 async function fetchClients(showLoading = false) {
   const ind = document.getElementById('refresh-indicator');
   if (showLoading) {
-    ind.textContent = '⟳ Actualizando...';
+    ind.textContent = 'Actualizando...';
     ind.className = 'refresh-indicator refreshing';
     renderSkeletons();
   }
@@ -930,7 +1176,7 @@ async function fetchClients(showLoading = false) {
       ind.className = 'refresh-indicator';
     }
   } catch (e) {
-    ind.textContent = '⚠️ Error al conectar. Reintentando...';
+    ind.textContent = 'Error al conectar. Reintentando...';
   }
 }
 
@@ -950,29 +1196,192 @@ function parseFlexibleDate(d) {
   return isNaN(parsed) ? null : parsed;
 }
 
+// La "fecha de ingreso" real de un cliente: usamos el campo dedicado si existe
+// (retrocompatible: no todas las hojas lo tienen todavia) y si no, caemos a
+// "Ultima fecha de contacto", que el backend solo escribe una vez, al crear el
+// cliente, y nunca vuelve a tocar — asi que hoy por hoy equivale a la fecha de alta.
+function getIngresoDate(c) {
+  return parseFlexibleDate(c['Fecha de Ingreso']) || parseFlexibleDate(c['Ultima fecha de contacto']);
+}
+
+// Saca acentos para poder comparar "Negociación"/"Negociacion" sin importar el backend.
+function normFase(s) {
+  return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+// Ya no se ordena por VIP/tipo de lead primero: todos los clientes se tratan
+// igual y se muestran del mas nuevo al mas viejo (ultimo cargado primero).
 function sortClients(list) {
-  const typeOrder = c => {
-    if (c['Prioridad'] === 'VIP') return 0;
-    const t = (c['Tipo de Lead'] || '').toLowerCase();
-    if (t === 'warm' || t === 'inbound') return 1;
-    return 2;
-  };
-  return [...list].sort((a, b) => {
-    const typeA = typeOrder(a), typeB = typeOrder(b);
-    if (typeA !== typeB) return typeA - typeB;
-    const dateA = parseFlexibleDate(a['Ultima fecha de contacto']) || new Date(0);
-    const dateB = parseFlexibleDate(b['Ultima fecha de contacto']) || new Date(0);
-    return dateA - dateB;
+  // Invertimos antes de ordenar para que, ante fechas empatadas (mismo dia),
+  // gane el que se cargo despues (el sort de JS es estable).
+  const reversed = [...list].reverse();
+  return reversed.sort((a, b) => {
+    const dateA = getIngresoDate(a) || new Date(0);
+    const dateB = getIngresoDate(b) || new Date(0);
+    return dateB - dateA;
   });
+}
+
+let clientFilters = {
+  search: '', misClientes: false, vendedor: '',
+  fase: [], estado: [], prioridad: [], tipoLead: [], rubro: [],
+  fechaDesde: '', fechaHasta: ''
+};
+
+function getFilteredClients() {
+  let list = clients.slice();
+  const f = clientFilters;
+
+  const q = (f.search || '').trim().toLowerCase();
+  if (q) {
+    list = list.filter(c => {
+      const hay = [
+        c['Nombre de empresa'], c['Nombre de contacto'], c['Numero de telefono'],
+        c['Email'], c['Direccion del local'], c['Rubro'], c['Dolor/Necesidad']
+      ].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  if (f.misClientes) {
+    list = list.filter(c => (c._vendedores || []).includes(currentUser) || c['Representante Inicial'] === currentUser);
+  }
+  if (f.vendedor) {
+    list = list.filter(c => (c._vendedores || []).includes(f.vendedor) || c['Representante Inicial'] === f.vendedor);
+  }
+  if (f.fase.length) list = list.filter(c => f.fase.includes(normFase(c['Fase actual'] || '')));
+  if (f.estado.length) list = list.filter(c => f.estado.includes(c['Estado'] || 'Lead'));
+  if (f.prioridad.length) list = list.filter(c => f.prioridad.includes(c['Prioridad'] || 'Normal'));
+  if (f.tipoLead.length) list = list.filter(c => f.tipoLead.includes(c['Tipo de Lead'] || 'Cold'));
+  if (f.rubro.length) list = list.filter(c => f.rubro.includes(c['Rubro'] || '(Sin rubro)'));
+
+  if (f.fechaDesde || f.fechaHasta) {
+    list = list.filter(c => {
+      const d = getIngresoDate(c);
+      if (!d) return false;
+      if (f.fechaDesde && d < new Date(f.fechaDesde + 'T00:00:00')) return false;
+      if (f.fechaHasta && d > new Date(f.fechaHasta + 'T23:59:59')) return false;
+      return true;
+    });
+  }
+
+  return list;
+}
+
+function countActiveFilters() {
+  const f = clientFilters;
+  let n = f.fase.length + f.estado.length + f.prioridad.length + f.tipoLead.length + f.rubro.length;
+  if (f.vendedor) n++;
+  if (f.fechaDesde) n++;
+  if (f.fechaHasta) n++;
+  return n;
+}
+
+function updateFilterUI() {
+  const n = countActiveFilters();
+  const badge = document.getElementById('filter-count-badge');
+  const btn = document.getElementById('crm-filter-btn');
+  if (badge) { badge.textContent = n; badge.style.display = n > 0 ? 'flex' : 'none'; }
+  if (btn) btn.classList.toggle('has-filters', n > 0);
+  const chip = document.getElementById('chip-mis-clientes');
+  if (chip) chip.classList.toggle('selected', clientFilters.misClientes);
+  const clearBtn = document.getElementById('crm-search-clear');
+  if (clearBtn) clearBtn.style.display = clientFilters.search ? 'flex' : 'none';
+}
+
+function applyClientFilters() {
+  clientFilters.search = document.getElementById('crm-search').value;
+  updateFilterUI();
+  renderClients();
+}
+
+function clearSearch() {
+  document.getElementById('crm-search').value = '';
+  applyClientFilters();
+}
+
+function toggleMisClientes() {
+  clientFilters.misClientes = !clientFilters.misClientes;
+  updateFilterUI();
+  renderClients();
+}
+
+function toggleFilterChip(el) {
+  el.classList.toggle('selected');
+}
+
+function populateFilterPanel() {
+  // Vendedor: todos los que existen hoy.
+  const vendSel = document.getElementById('filter-vendedor');
+  vendSel.innerHTML = '<option value="">Todos los vendedores</option>' +
+    vendedores.map(v => `<option value="${v.username}">${v.nombreCompleto || v.username}</option>`).join('');
+  vendSel.value = clientFilters.vendedor;
+
+  // Rubro: dinamico, segun lo que haya cargado hoy.
+  const rubros = Array.from(new Set(clients.map(c => c['Rubro'] || '(Sin rubro)'))).sort((a, b) => a.localeCompare(b));
+  const rubroGroup = document.getElementById('filter-rubro-group');
+  rubroGroup.innerHTML = rubros.map(r =>
+    `<button type="button" class="chip-select${clientFilters.rubro.includes(r) ? ' selected' : ''}" data-val="${r.replace(/"/g, '&quot;')}" onclick="toggleFilterChip(this)">${r}</button>`
+  ).join('');
+
+  // Restaurar seleccion previa en los grupos fijos.
+  ['fase', 'estado', 'prioridad', 'tipoLead'].forEach(key => {
+    const groupId = { fase: 'filter-fase-group', estado: 'filter-estado-group', prioridad: 'filter-prioridad-group', tipoLead: 'filter-tipolead-group' }[key];
+    document.querySelectorAll(`#${groupId} .chip-select`).forEach(btn => {
+      btn.classList.toggle('selected', clientFilters[key].includes(btn.dataset.val));
+    });
+  });
+
+  document.getElementById('filter-fecha-desde').value = clientFilters.fechaDesde;
+  document.getElementById('filter-fecha-hasta').value = clientFilters.fechaHasta;
+}
+
+function openFilterPanel() {
+  populateFilterPanel();
+  openModal('modal-filters');
+}
+
+function readChipGroup(groupId) {
+  return Array.from(document.querySelectorAll(`#${groupId} .chip-select.selected`)).map(btn => btn.dataset.val);
+}
+
+function confirmClientFilters() {
+  clientFilters.vendedor = document.getElementById('filter-vendedor').value;
+  clientFilters.fase = readChipGroup('filter-fase-group');
+  clientFilters.estado = readChipGroup('filter-estado-group');
+  clientFilters.prioridad = readChipGroup('filter-prioridad-group');
+  clientFilters.tipoLead = readChipGroup('filter-tipolead-group');
+  clientFilters.rubro = readChipGroup('filter-rubro-group');
+  clientFilters.fechaDesde = document.getElementById('filter-fecha-desde').value;
+  clientFilters.fechaHasta = document.getElementById('filter-fecha-hasta').value;
+  closeModal('modal-filters');
+  updateFilterUI();
+  renderClients();
+}
+
+function clearClientFilters() {
+  clientFilters.vendedor = '';
+  clientFilters.fase = []; clientFilters.estado = []; clientFilters.prioridad = [];
+  clientFilters.tipoLead = []; clientFilters.rubro = [];
+  clientFilters.fechaDesde = ''; clientFilters.fechaHasta = '';
+  populateFilterPanel();
+  closeModal('modal-filters');
+  updateFilterUI();
+  renderClients();
 }
 
 function renderClients() {
   const container = document.getElementById('clients-container');
   if (!clients.length) {
-    container.innerHTML = `<div class="empty-state"><div class="emoji">📋</div><p>No hay clientes activos por el momento.</p></div>`;
+    container.innerHTML = `<div class="empty-state">${icon('users', 46)}<p>No hay clientes activos por el momento.</p></div>`;
     return;
   }
-  const sorted = sortClients(clients);
+  const filtered = getFilteredClients();
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state">${icon('search', 46)}<p>Ningún cliente coincide con la búsqueda o los filtros.</p></div>`;
+    return;
+  }
+  const sorted = sortClients(filtered);
   container.innerHTML = sorted.map(c => renderCard(c)).join('');
 }
 
@@ -996,7 +1405,7 @@ function renderCard(c) {
 
   const faseTag = `<span class="badge badge-fase-${faseClass}">${fase}</span>`;
   const estadoTag = `<span class="badge badge-estado-${estado.toLowerCase()}">${estado}</span>`;
-  const prioTag = isVip ? `<span class="badge badge-vip">⭐ VIP</span>` : `<span class="badge badge-normal">Normal</span>`;
+  const prioTag = isVip ? `<span class="badge badge-vip">${icon('star', 11)} VIP</span>` : `<span class="badge badge-normal">Normal</span>`;
   const tipoClass = tipo.toLowerCase() === 'warm' || tipo.toLowerCase() === 'inbound' ? 'warm' : 'cold';
   const tipoTag = `<span class="badge badge-${tipoClass}">${tipo}</span>`;
 
@@ -1021,14 +1430,14 @@ function renderCard(c) {
   try {
     const parsed = typeof notesDisplay === 'string' ? JSON.parse(notesDisplay) : notesDisplay;
     const parts = [];
-    if (parsed['Nombre de referente']) parts.push(`📎 Ref: ${parsed['Nombre de referente']}`);
+    if (parsed['Nombre de referente']) parts.push(`Ref: ${parsed['Nombre de referente']}`);
     if (parsed['Notas generales']) parts.push(parsed['Notas generales']);
     notesDisplay = parts.join(' · ');
   } catch {}
 
-  const vendedoresTags = (c._vendedores || []).map(u => `<span class="badge badge-vendedor">👤 ${nombreVendedor(u)}</span>`).join('');
+  const vendedoresTags = (c._vendedores || []).map(u => `<span class="badge badge-vendedor">${icon('user', 11)} ${nombreVendedor(u)}</span>`).join('');
   const tieneGeo = c['Latitud'] && c['Longitud'];
-  const geoBadge = tieneGeo ? '' : `<span class="badge badge-nogeo">📍 sin ubicación</span>`;
+  const geoBadge = tieneGeo ? '' : `<span class="badge badge-nogeo">${icon('mapPin', 11)} Sin ubicación</span>`;
 
   const nextStageInfo = getNextStageInfo(fase, estado);
   const id = JSON.stringify(c['id']).replace(/"/g, '&quot;');
@@ -1041,11 +1450,11 @@ function renderCard(c) {
         <div class="card-badges">${faseTag}${isVip ? prioTag : ''}${estadoTag}</div>
       </div>
       <div class="card-info">
-        <div class="card-info-row"><span class="icon">👤</span><span class="label">Contacto</span><span>${c['Nombre de contacto'] || '—'}</span></div>
-        <div class="card-info-row"><span class="icon">📞</span><span class="label">Tel.</span><span>${c['Numero de telefono'] || '—'}</span></div>
-        <div class="card-info-row"><span class="icon">📧</span><span class="label">Email</span><span>${c['Email'] || '—'}</span></div>
-        <div class="card-info-row"><span class="icon">📍</span><span class="label">Dir.</span><span>${c['Direccion del local'] || '—'}</span></div>
-        <div class="card-info-row"><span class="icon">🏷️</span><span class="label">Rubro</span><span>${c['Rubro'] || '—'} · ${tipoTag}</span></div>
+        <div class="card-info-row">${icon('user', 14)}<span class="label">Contacto</span><span>${c['Nombre de contacto'] || '—'}</span></div>
+        <div class="card-info-row">${icon('phone', 14)}<span class="label">Tel.</span><span>${c['Numero de telefono'] || '—'}</span></div>
+        <div class="card-info-row">${icon('mail', 14)}<span class="label">Email</span><span>${c['Email'] || '—'}</span></div>
+        <div class="card-info-row">${icon('mapPin', 14)}<span class="label">Dir.</span><span>${c['Direccion del local'] || '—'}</span></div>
+        <div class="card-info-row">${icon('tag', 14)}<span class="label">Rubro</span><span>${c['Rubro'] || '—'} · ${tipoTag}</span></div>
       </div>
       <div class="card-vendedores">${vendedoresTags}${geoBadge}</div>
       ${c['Dolor/Necesidad'] ? `<div class="card-pain"><strong>Necesidad:</strong> ${c['Dolor/Necesidad']}${notesDisplay ? `<br><span style="font-size:11px;opacity:0.8;">${notesDisplay}</span>` : ''}</div>` : ''}
@@ -1056,9 +1465,9 @@ function renderCard(c) {
       </div>
       <div class="card-pipeline">${pipelineDots}</div>
       <div class="card-actions">
-        ${nextStageInfo ? `<button class="btn-card btn-next-stage" onclick="openStageModal('${id}', '${nextStageInfo.action}', '${nextStageInfo.label}', '${nextStageInfo.desc}', '${nextStageInfo.notaLabel}')">${nextStageInfo.btnLabel}</button>` : `<button class="btn-card btn-next-stage" style="background:#d1fae5;color:#065f46;cursor:default;">✅ Proceso completo</button>`}
-        <button class="btn-card btn-edit" onclick='openEditModal(${JSON.stringify(c).replace(/'/g, "&#39;")})'>✏️</button>
-        <button class="btn-card btn-delete" onclick="openDeleteModal('${id}', '${safeCompany}')">🗑️</button>
+        ${nextStageInfo ? `<button class="btn-card btn-next-stage" onclick="openStageModal('${id}', '${nextStageInfo.action}', '${nextStageInfo.label}', '${nextStageInfo.desc}', '${nextStageInfo.notaLabel}')">${nextStageInfo.btnLabel}</button>` : `<button class="btn-card btn-next-stage" style="background:#d1fae5;color:#065f46;cursor:default;">${icon('check', 14)} Proceso completo</button>`}
+        <button class="btn-card btn-edit" onclick='openEditModal(${JSON.stringify(c).replace(/'/g, "&#39;")})'>${icon('edit', 15)}</button>
+        <button class="btn-card btn-delete" onclick="openDeleteModal('${id}', '${safeCompany}')">${icon('trash', 15)}</button>
       </div>
     </div>`;
 }
@@ -1066,8 +1475,8 @@ function renderCard(c) {
 function getNextStageInfo(fase, estado) {
   if (fase === 'Filtro') return { action: 'edit_filtro', label: 'Filtro → Propuesta', btnLabel: '→ Propuesta', desc: 'Completar la etapa de Filtro y avanzar a Propuesta.', notaLabel: 'Notas del resultado del Filtro' };
   if (fase === 'Propuesta') return { action: 'edit_propuesta', label: 'Propuesta → Negociación', btnLabel: '→ Negociación', desc: 'Completar la etapa de Propuesta y avanzar a Negociación.', notaLabel: 'Notas de la Entrevista / Propuesta' };
-  if (fase === 'Negociación' && estado === 'Lead') return { action: 'edit_negociacion', label: 'Cerrar Negociación', btnLabel: '✅ Cerrar Negoc.', desc: 'Finalizar la negociación.', notaLabel: 'Notas de la Negociación' };
-  if (fase === 'Negociación' && estado !== 'Cliente') return { action: 'edit_cliente', label: 'Convertir a Cliente', btnLabel: '🎉 → Cliente', desc: 'Marcar como Cliente oficial.', notaLabel: null };
+  if (fase === 'Negociación' && estado === 'Lead') return { action: 'edit_negociacion', label: 'Cerrar Negociación', btnLabel: `${icon('check', 14)} Cerrar Negoc.`, desc: 'Finalizar la negociación.', notaLabel: 'Notas de la Negociación' };
+  if (fase === 'Negociación' && estado !== 'Cliente') return { action: 'edit_cliente', label: 'Convertir a Cliente', btnLabel: `${icon('trendingUp', 14)} → Cliente`, desc: 'Marcar como Cliente oficial.', notaLabel: null };
   return null;
 }
 
@@ -1075,7 +1484,7 @@ function getNextStageInfo(fase, estado) {
 function openStageModal(id, action, label, desc, notaLabel) {
   document.getElementById('stage-client-id').value = id;
   document.getElementById('stage-action').value = action;
-  document.getElementById('stage-modal-title').textContent = '🚀 ' + label;
+  document.querySelector('#stage-modal-title span').textContent = label;
   document.getElementById('stage-modal-subtitle').textContent = desc;
   document.getElementById('stage-nota').value = '';
   const notaGroup = document.getElementById('stage-nota-group');
@@ -1089,16 +1498,16 @@ async function confirmStage() {
   const action = document.getElementById('stage-action').value;
   const nota = document.getElementById('stage-nota').value.trim();
   const btn = document.getElementById('btn-confirm-stage');
-  if (action !== 'edit_cliente' && !nota) { showToast('⚠️ Escribí una nota antes de continuar.'); return; }
+  if (action !== 'edit_cliente' && !nota) { showToast('Escribí una nota antes de continuar.'); return; }
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Guardando...';
   const payload = { action, id };
   if (action !== 'edit_cliente') payload.nota = nota;
   try {
     await apiCall(payload);
     closeModal('modal-stage');
-    showToast('✅ Etapa actualizada');
+    showToast('Etapa actualizada');
     await fetchClients(false);
-  } catch { showToast('⚠️ Error al actualizar.'); }
+  } catch { showToast('Error al actualizar.'); }
   finally { btn.disabled = false; btn.textContent = 'Confirmar'; }
 }
 
@@ -1123,11 +1532,11 @@ async function openEditModal(client) {
   const geoStatus = document.getElementById('edit-geo-status');
   if (client['Latitud'] && client['Longitud']) {
     geoStatus.className = 'geo-status ok';
-    geoStatus.textContent = `📍 Ubicación cargada (${parseFloat(client['Latitud']).toFixed(5)}, ${parseFloat(client['Longitud']).toFixed(5)})`;
+    geoStatus.innerHTML = `${icon('mapPin', 16)} Ubicación cargada (${parseFloat(client['Latitud']).toFixed(5)}, ${parseFloat(client['Longitud']).toFixed(5)})`;
     setTimeout(() => renderMiniMap(parseFloat(client['Latitud']), parseFloat(client['Longitud'])), 150);
   } else {
     geoStatus.className = 'geo-status error';
-    geoStatus.textContent = '📍 Este cliente no tiene ubicación cargada todavía.';
+    geoStatus.innerHTML = `${icon('mapPin', 16)} Este cliente no tiene ubicación cargada todavía.`;
   }
 
   openModal('modal-edit');
@@ -1138,7 +1547,7 @@ function renderVendedoresFicha(usernames) {
   if (!usernames.length) { list.innerHTML = '<p class="form-hint">Sin vendedores asignados.</p>'; return; }
   list.innerHTML = usernames.map(u => `
     <div class="vendedor-check-row">
-      <span style="flex:1;">👤 ${nombreVendedor(u)}</span>
+      <span style="flex:1;display:flex;align-items:center;gap:6px;">${icon('user', 14)} ${nombreVendedor(u)}</span>
       <button class="btn-card btn-delete" style="flex:none;padding:6px 10px;" onclick="quitarVendedorDeFicha('${u}')">Quitar</button>
     </div>`).join('');
 }
@@ -1152,8 +1561,8 @@ async function agregarVendedorAFicha() {
     currentEditClient._vendedores = currentEditClient._vendedores || [];
     if (currentEditClient._vendedores.indexOf(username) === -1) currentEditClient._vendedores.push(username);
     renderVendedoresFicha(currentEditClient._vendedores);
-    showToast('✅ Vendedor asignado');
-  } catch { showToast('⚠️ No se pudo asignar.'); }
+    showToast('Vendedor asignado');
+  } catch { showToast('No se pudo asignar.'); }
 }
 
 async function quitarVendedorDeFicha(username) {
@@ -1162,25 +1571,25 @@ async function quitarVendedorDeFicha(username) {
     await apiCall({ action: 'quitar_vendedor', clienteId, username });
     currentEditClient._vendedores = (currentEditClient._vendedores || []).filter(u => u !== username);
     renderVendedoresFicha(currentEditClient._vendedores);
-    showToast('✅ Vendedor quitado');
-  } catch { showToast('⚠️ No se pudo quitar.'); }
+    showToast('Vendedor quitado');
+  } catch { showToast('No se pudo quitar.'); }
 }
 
 async function actualizarUbicacionFicha() {
   const clienteId = document.getElementById('edit-client-id').value;
   const geoStatus = document.getElementById('edit-geo-status');
   geoStatus.className = 'geo-status pending';
-  geoStatus.textContent = '📍 Buscando tu ubicación actual…';
+  geoStatus.innerHTML = `${icon('mapPin', 16)} Buscando tu ubicación actual…`;
   try {
     const pos = await getCurrentPosition();
     await apiCall({ action: 'actualizar_ubicacion', id: clienteId, lat: pos.coords.latitude, lng: pos.coords.longitude, gpsAccuracy: pos.coords.accuracy });
     geoStatus.className = 'geo-status ok';
-    geoStatus.textContent = `📍 Ubicación actualizada (${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)})`;
+    geoStatus.innerHTML = `${icon('mapPin', 16)} Ubicación actualizada (${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)})`;
     renderMiniMap(pos.coords.latitude, pos.coords.longitude);
-    showToast('✅ Ubicación actualizada');
+    showToast('Ubicación actualizada');
   } catch (e) {
     geoStatus.className = 'geo-status error';
-    geoStatus.textContent = '⚠️ No se pudo obtener tu ubicación. Revisá los permisos del navegador.';
+    geoStatus.innerHTML = `${icon('alertTriangle', 16)} No se pudo obtener tu ubicación. Revisá los permisos del navegador.`;
   }
 }
 
@@ -1210,9 +1619,9 @@ async function confirmEdit() {
   try {
     await apiCall({ action: 'general_edit', id, ClientAtributes: attrs });
     closeModal('modal-edit');
-    showToast('✅ Cliente actualizado');
+    showToast('Cliente actualizado');
     await fetchClients(false);
-  } catch { showToast('⚠️ Error al guardar.'); }
+  } catch { showToast('Error al guardar.'); }
   finally { btn.disabled = false; btn.textContent = 'Guardar Cambios'; }
 }
 
@@ -1229,9 +1638,9 @@ async function confirmDelete() {
   try {
     await apiCall({ action: 'eliminate', id: pendingDeleteId });
     closeModal('modal-delete');
-    showToast('🗑️ Cliente eliminado');
+    showToast('Cliente eliminado');
     await fetchClients(false);
-  } catch { showToast('⚠️ Error al eliminar.'); }
+  } catch { showToast('Error al eliminar.'); }
   finally { btn.disabled = false; btn.textContent = 'Eliminar'; pendingDeleteId = null; }
 }
 
@@ -1249,23 +1658,23 @@ function openCreateModalStep1() {
   lastCapturedGeo = null;
   const geoStatus = document.getElementById('create-geo-status');
   geoStatus.className = 'geo-status pending';
-  geoStatus.textContent = '📍 Buscando tu ubicación…';
+  geoStatus.innerHTML = `${icon('mapPin', 16)} Buscando tu ubicación…`;
   openModal('modal-create-step1');
 
   getCurrentPosition().then(pos => {
     lastCapturedGeo = { lat: pos.coords.latitude, lng: pos.coords.longitude, gpsAccuracy: pos.coords.accuracy };
     geoStatus.className = 'geo-status ok';
-    geoStatus.textContent = `📍 Ubicación capturada (precisión ~${Math.round(pos.coords.accuracy)}m)`;
+    geoStatus.innerHTML = `${icon('mapPin', 16)} Ubicación capturada (precisión ~${Math.round(pos.coords.accuracy)}m)`;
   }).catch(() => {
     geoStatus.className = 'geo-status error';
-    geoStatus.textContent = '⚠️ No se pudo obtener tu ubicación. Se puede cargar después desde la ficha.';
+    geoStatus.innerHTML = `${icon('alertTriangle', 16)} No se pudo obtener tu ubicación. Se puede cargar después desde la ficha.`;
   });
 }
 
 async function confirmCreateStep1() {
   const contacto = document.getElementById('c-contacto').value.trim();
   const notas = document.getElementById('c-notas').value.trim();
-  if (!contacto || !notas) { showToast('⚠️ Nombre de contacto y Notas son obligatorios.'); return; }
+  if (!contacto || !notas) { showToast('Nombre de contacto y Notas son obligatorios.'); return; }
 
   const btn = document.getElementById('btn-confirm-create');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Creando...';
@@ -1284,11 +1693,11 @@ async function confirmCreateStep1() {
   try {
     const res = await apiCall(payload);
     closeModal('modal-create-step1');
-    showToast('🎉 Cliente creado');
+    showToast('Cliente creado');
     const newId = res.data && res.data.id;
     await fetchClients(false);
     openCreateStep2(newId, payload.nombreEmpresa || contacto);
-  } catch { showToast('⚠️ Error al crear el cliente.'); }
+  } catch { showToast('Error al crear el cliente.'); }
   finally { btn.disabled = false; btn.textContent = 'Guardar y agendar reunión'; }
 }
 
@@ -1317,7 +1726,7 @@ async function confirmCreateStep2() {
   const inicio = document.getElementById('step2-inicio').value;
   const fin = document.getElementById('step2-fin').value;
   const vendedoresSeleccionados = getCheckedVendedores('step2-vendedores-list');
-  if (!inicio || !fin) { showToast('⚠️ Elegí fecha y hora.'); return; }
+  if (!inicio || !fin) { showToast('Elegí fecha y hora.'); return; }
 
   try {
     await apiCall({
@@ -1331,10 +1740,10 @@ async function confirmCreateStep2() {
       notas: document.getElementById('step2-notas').value.trim(),
       creadoPor: currentUser
     });
-    showToast('✅ Reunión agendada. Se envió la invitación de Calendar.');
+    showToast('Reunión agendada. Se envió la invitación de Calendar.');
     closeModal('modal-create-step2');
     openCreateStep3(clienteId);
-  } catch { showToast('⚠️ No se pudo agendar la reunión.'); }
+  } catch { showToast('No se pudo agendar la reunión.'); }
 }
 
 // ==================== ALTA RAPIDA - PASO 3 (DATOS OPCIONALES) ====================
@@ -1373,9 +1782,9 @@ async function confirmStep3() {
     await apiCall({ action: 'general_edit', id, ClientAtributes: attrs });
     if (referente) await updateReferente(id, referente);
     closeModal('modal-create-step3');
-    showToast('✅ Datos guardados');
+    showToast('Datos guardados');
     await fetchClients(false);
-  } catch { showToast('⚠️ Error al guardar los datos.'); }
+  } catch { showToast('Error al guardar los datos.'); }
 }
 
 async function updateReferente(id, referente) {
@@ -1384,18 +1793,66 @@ async function updateReferente(id, referente) {
 }
 
 // ==================== VENDEDOR CHECKBOXES (reusable) ====================
+// ==================== BUSCADOR DE CLIENTES (para vincular a una tarea) ====================
+function filterTaskClientResults() {
+  const q = document.getElementById('task-cliente-search').value.trim().toLowerCase();
+  const resultsEl = document.getElementById('task-cliente-results');
+  if (!q) { resultsEl.innerHTML = ''; resultsEl.style.display = 'none'; return; }
+  const matches = clients.filter(c => {
+    const hay = [c['Nombre de empresa'], c['Nombre de contacto']].join(' ').toLowerCase();
+    return hay.includes(q);
+  }).slice(0, 8);
+  resultsEl.innerHTML = matches.length
+    ? matches.map(c => `
+      <div class="client-picker-item" onclick='selectTaskCliente(${JSON.stringify(String(c['id']))}, ${JSON.stringify(c['Nombre de empresa'] || c['Nombre de contacto'] || '')})'>
+        <span class="client-picker-item-name">${c['Nombre de empresa'] || c['Nombre de contacto'] || '—'}</span>
+        ${c['Nombre de empresa'] && c['Nombre de contacto'] ? `<span class="client-picker-item-sub">${c['Nombre de contacto']}</span>` : ''}
+      </div>`).join('')
+    : `<div class="client-picker-empty">Sin resultados para "${q}"</div>`;
+  resultsEl.style.display = 'block';
+}
+
+function selectTaskCliente(id, nombre) {
+  document.getElementById('task-cliente').value = id;
+  document.getElementById('task-cliente-search').value = '';
+  const resultsEl = document.getElementById('task-cliente-results');
+  resultsEl.innerHTML = ''; resultsEl.style.display = 'none';
+  renderTaskClienteSelected(nombre);
+}
+
+function clearTaskCliente() {
+  document.getElementById('task-cliente').value = '';
+  renderTaskClienteSelected(null);
+}
+
+function renderTaskClienteSelected(nombre) {
+  const sel = document.getElementById('task-cliente-selected');
+  if (!nombre) { sel.style.display = 'none'; sel.innerHTML = ''; return; }
+  sel.style.display = 'flex';
+  sel.innerHTML = `<span>${icon('briefcase', 14)} ${nombre}</span><button type="button" onclick="clearTaskCliente()">${icon('x', 14)}</button>`;
+}
+
+// Chips en vez de checkboxes nativos: el estado "elegido" queda mucho mas
+// claro (fondo celeste + tilde + texto en negrita) y no depende del estilo
+// de checkbox de cada navegador/celular, que era lo que generaba la confusion
+// de "se prende y se apaga y no se sabe si quedo marcado".
 function renderVendedorCheckboxes(containerId, preseleccionados) {
   const el = document.getElementById(containerId);
   if (!vendedores.length) { el.innerHTML = '<p class="form-hint">No hay vendedores cargados en la hoja "users".</p>'; return; }
-  el.innerHTML = vendedores.map(v => `
-    <div class="vendedor-check-row">
-      <input type="checkbox" value="${v.username}" id="${containerId}-${v.username}" ${preseleccionados && preseleccionados.indexOf(v.username) !== -1 ? 'checked' : ''}>
-      <label for="${containerId}-${v.username}" style="flex:1;">${v.nombreCompleto || v.username}</label>
-    </div>`).join('');
+  el.innerHTML = `<div class="vendedor-chip-group">` + vendedores.map(v => `
+    <button type="button" class="vendedor-chip${preseleccionados && preseleccionados.indexOf(v.username) !== -1 ? ' selected' : ''}" data-username="${v.username}" onclick="toggleVendedorChip(this)">
+      <span class="chip-icon-off">${icon('user', 18)}</span>
+      <span class="chip-icon-on">${icon('checkCircle', 18)}</span>
+      <span>${v.nombreCompleto || v.username}</span>
+    </button>`).join('') + `</div>`;
+}
+
+function toggleVendedorChip(el) {
+  el.classList.toggle('selected');
 }
 
 function getCheckedVendedores(containerId) {
-  return Array.from(document.querySelectorAll(`#${containerId} input[type=checkbox]:checked`)).map(i => i.value);
+  return Array.from(document.querySelectorAll(`#${containerId} .vendedor-chip.selected`)).map(b => b.dataset.username);
 }
 
 // ==================== CALENDARIO / TAREAS ====================
@@ -1506,7 +1963,7 @@ function renderSelectedDayTasks(tasksByDay) {
   document.getElementById('month-selected-header').textContent = selectedMonthDay.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
   const container = document.getElementById('month-day-tasks');
   if (!tasks.length) {
-    container.innerHTML = `<div class="empty-state" style="padding:30px 20px;"><div class="emoji">🌤️</div><p>Sin tareas este día.</p></div>`;
+    container.innerHTML = `<div class="empty-state" style="padding:30px 20px;">${icon('checkCircle', 46)}<p>Sin tareas este día.</p></div>`;
     return;
   }
   container.innerHTML = tasks.map(t => renderTaskCard(t)).join('');
@@ -1548,7 +2005,7 @@ async function renderAgenda() {
     const res = await apiCall({ action: 'get_tareas', desde: desde.toISOString(), hasta: hasta.toISOString() });
     tareasCache = res.data || [];
     if (!tareasCache.length) {
-      container.innerHTML = `<div class="empty-state"><div class="emoji">🗓️</div><p>No hay tareas en este rango.</p></div>`;
+      container.innerHTML = `<div class="empty-state">${icon('calendar', 46)}<p>No hay tareas en este rango.</p></div>`;
       return;
     }
     tareasCache.sort((a,b) => new Date(a['FechaHoraInicio']) - new Date(b['FechaHoraInicio']));
@@ -1567,7 +2024,7 @@ async function renderAgenda() {
       container.innerHTML = html;
     }
   } catch (e) {
-    container.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><p>No se pudieron cargar las tareas.</p></div>`;
+    container.innerHTML = `<div class="empty-state">${icon('alertTriangle', 46)}<p>No se pudieron cargar las tareas.</p></div>`;
   }
 }
 
@@ -1577,55 +2034,63 @@ function renderTaskCard(t) {
   const fmtHora = d => d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
   const vendedoresArr = String(t['VendedoresAsignados'] || '').split(',').map(s => s.trim()).filter(Boolean);
   const estadoClass = t['Estado'] === 'Hecha' ? 'estado-hecha' : (t['Estado'] === 'Cancelada' ? 'estado-cancelada' : '');
-  const tipoIcon = { 'Reunion': '🤝', 'Llamada': '📞', 'Salida a vender': '🚗', 'Otro': '🗒️' }[t['Tipo']] || '🗒️';
+  const tipoIconName = { 'Reunion': 'users', 'Llamada': 'phone', 'Salida a vender': 'navigation', 'Otro': 'fileText' }[t['Tipo']] || 'fileText';
 
   return `
     <div class="task-card ${estadoClass}">
       <div class="task-top">
-        <div class="task-title">${tipoIcon} ${t['Titulo']}</div>
+        <div class="task-title" style="display:flex;align-items:center;gap:6px;">${icon(tipoIconName, 15)} ${t['Titulo']}</div>
         <div class="task-time">${fmtHora(inicio)} – ${fmtHora(fin)}</div>
       </div>
       <div class="task-meta">${t['Notas'] || ''}</div>
-      <div class="task-vendedores">${vendedoresArr.map(u => `<span class="badge badge-vendedor">👤 ${nombreVendedor(u)}</span>`).join('')}</div>
+      <div class="task-vendedores">${vendedoresArr.map(u => `<span class="badge badge-vendedor">${icon('user', 11)} ${nombreVendedor(u)}</span>`).join('')}</div>
       ${t['Estado'] !== 'Cancelada' ? `
       <div class="task-actions">
-        <button class="btn-card btn-edit" onclick='openTaskModal(${JSON.stringify(t).replace(/'/g,"&#39;")})'>✏️ Editar</button>
-        ${t['Estado'] !== 'Hecha' ? `<button class="btn-card btn-next-stage" onclick="marcarTareaHecha('${t['id']}')">✅ Hecha</button>` : ''}
-        <button class="btn-card btn-delete" onclick="cancelarTarea('${t['id']}')">🗑️</button>
+        <button class="btn-card btn-edit" onclick='openTaskModal(${JSON.stringify(t).replace(/'/g,"&#39;")})'>${icon('edit', 14)} Editar</button>
+        ${t['Estado'] !== 'Hecha' ? `<button class="btn-card btn-next-stage" onclick="marcarTareaHecha('${t['id']}')">${icon('check', 14)} Hecha</button>` : ''}
+        <button class="btn-card btn-delete" onclick="cancelarTarea('${t['id']}')">${icon('trash', 15)}</button>
       </div>` : ''}
     </div>`;
 }
 
 async function marcarTareaHecha(id) {
-  try { await apiCall({ action: 'editar_tarea', id, estado: 'Hecha' }); showToast('✅ Tarea marcada como hecha'); refreshCalendarActiveTab(); }
-  catch { showToast('⚠️ Error al actualizar.'); }
+  try { await apiCall({ action: 'editar_tarea', id, estado: 'Hecha' }); showToast('Tarea marcada como hecha'); refreshCalendarActiveTab(); }
+  catch { showToast('Error al actualizar.'); }
 }
 
 async function cancelarTarea(id) {
-  try { await apiCall({ action: 'eliminar_tarea', id }); showToast('🗑️ Tarea cancelada'); refreshCalendarActiveTab(); }
-  catch { showToast('⚠️ Error al cancelar.'); }
+  try { await apiCall({ action: 'eliminar_tarea', id }); showToast('Tarea cancelada'); refreshCalendarActiveTab(); }
+  catch { showToast('Error al cancelar.'); }
 }
 
 function openTaskModal(t) {
-  const sel = document.getElementById('task-cliente');
-  sel.innerHTML = '<option value="">— Ninguno —</option>' + clients.map(c => `<option value="${c['id']}">${c['Nombre de empresa'] || c['Nombre de contacto']}</option>`).join('');
+  document.getElementById('task-cliente-search').value = '';
+  document.getElementById('task-cliente-results').innerHTML = '';
+  document.getElementById('task-cliente-results').style.display = 'none';
 
   if (t && t.id) {
-    document.getElementById('task-modal-title').textContent = '✏️ Editar Tarea';
+    document.querySelector('#task-modal-title span').textContent = 'Editar Tarea';
     document.getElementById('task-id').value = t['id'];
     document.getElementById('task-titulo').value = t['Titulo'] || '';
     document.getElementById('task-tipo').value = t['Tipo'] || 'Reunion';
-    sel.value = t['ClienteId'] || '';
+    document.getElementById('task-cliente').value = t['ClienteId'] || '';
+    if (t['ClienteId']) {
+      const linked = clients.find(c => String(c['id']) === String(t['ClienteId']));
+      renderTaskClienteSelected(linked ? (linked['Nombre de empresa'] || linked['Nombre de contacto']) : 'Cliente vinculado');
+    } else {
+      renderTaskClienteSelected(null);
+    }
     document.getElementById('task-inicio').value = toDatetimeLocalValue(new Date(t['FechaHoraInicio']));
     document.getElementById('task-fin').value = toDatetimeLocalValue(new Date(t['FechaHoraFin']));
     document.getElementById('task-notas').value = t['Notas'] || '';
     renderVendedorCheckboxes('task-vendedores-list', String(t['VendedoresAsignados'] || '').split(',').map(s => s.trim()));
   } else {
-    document.getElementById('task-modal-title').textContent = '🗓️ Nueva Tarea';
+    document.querySelector('#task-modal-title span').textContent = 'Nueva Tarea';
     document.getElementById('task-id').value = '';
     document.getElementById('task-titulo').value = '';
     document.getElementById('task-tipo').value = 'Reunion';
-    sel.value = '';
+    document.getElementById('task-cliente').value = '';
+    renderTaskClienteSelected(null);
     const baseDate = calendarTab === 'mes' ? selectedMonthDay : agendaDate;
     const now = new Date(baseDate); now.setHours(now.getHours() + 1, 0, 0, 0);
     const fin = new Date(now.getTime() + 60*60*1000);
@@ -1643,7 +2108,7 @@ async function confirmTask() {
   const inicio = document.getElementById('task-inicio').value;
   const fin = document.getElementById('task-fin').value;
   const vendedoresSeleccionados = getCheckedVendedores('task-vendedores-list');
-  if (!titulo || !inicio || !fin) { showToast('⚠️ Completá título, inicio y fin.'); return; }
+  if (!titulo || !inicio || !fin) { showToast('Completá título, inicio y fin.'); return; }
 
   const payload = {
     titulo, tipo: document.getElementById('task-tipo').value,
@@ -1654,28 +2119,22 @@ async function confirmTask() {
   };
 
   try {
-    if (id) { payload.id = id; await apiCall({ action: 'editar_tarea', ...payload }); showToast('✅ Tarea actualizada'); }
-    else { payload.creadoPor = currentUser; await apiCall({ action: 'crear_tarea', ...payload }); showToast('✅ Tarea creada, invitación enviada'); }
+    if (id) { payload.id = id; await apiCall({ action: 'editar_tarea', ...payload }); showToast('Tarea actualizada'); }
+    else { payload.creadoPor = currentUser; await apiCall({ action: 'crear_tarea', ...payload }); showToast('Tarea creada, invitación enviada'); }
     closeModal('modal-task');
     refreshCalendarActiveTab();
-  } catch { showToast('⚠️ No se pudo guardar la tarea.'); }
+  } catch { showToast('No se pudo guardar la tarea.'); }
 }
 
 // ==================== ESTADISTICAS ====================
 async function loadStats() {
   document.getElementById('stats-grid').innerHTML = '<div class="skeleton-card"></div>';
   try {
-    const [statsRes, mapaRes] = await Promise.all([
-      apiCall({ action: 'get_stats' }),
-      apiCall({ action: 'get_clientes_mapa' })
-    ]);
+    const statsRes = await apiCall({ action: 'get_stats' });
     renderStatsGrid(statsRes.data);
     renderVendorStats(statsRes.data);
-    try { renderMap(mapaRes.data || []); } catch (mapErr) {
-      document.getElementById('map-container').innerHTML = '<div class="empty-state"><p>No se pudo cargar el mapa.</p></div>';
-    }
   } catch (e) {
-    document.getElementById('stats-grid').innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><p>No se pudieron cargar las estadísticas.</p></div>`;
+    document.getElementById('stats-grid').innerHTML = `<div class="empty-state">${icon('alertTriangle', 46)}<p>No se pudieron cargar las estadísticas.</p></div>`;
   }
 }
 
@@ -1707,30 +2166,13 @@ function renderVendorStats(data) {
       <div class="vendor-row">
         <div class="vendor-row-top"><span class="vendor-row-name">${nombreVendedor(nombre)}</span><span class="badge badge-vendedor">${v.total} clientes</span></div>
         <div class="vendor-row-stats">
-          <span>🎯 ${v.clientes} cerrados</span>
-          <span>🔄 ${v.leads} en proceso</span>
-          <span>🗓️ ${t.pendientes} tareas pend.</span>
-          <span>✅ ${t.hechas} hechas</span>
+          <span>${icon('trendingUp', 12)} ${v.clientes} cerrados</span>
+          <span>${icon('refresh', 12)} ${v.leads} en proceso</span>
+          <span>${icon('calendar', 12)} ${t.pendientes} tareas pend.</span>
+          <span>${icon('check', 12)} ${t.hechas} hechas</span>
         </div>
       </div>`;
   }).join('');
-}
-
-function renderMap(puntos) {
-  if (statsLeafletMap) { statsLeafletMap.remove(); statsLeafletMap = null; }
-  document.getElementById('map-container').innerHTML = '';
-  statsLeafletMap = L.map('map-container').setView([-34.6, -58.4], 5);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(statsLeafletMap);
-
-  const colorPorFase = { 'Filtro': '#2563eb', 'Propuesta': '#16a34a', 'Negociación': '#ea580c' };
-  const bounds = [];
-  puntos.forEach(p => {
-    const color = colorPorFase[p.fase] || '#64748b';
-    const marker = L.circleMarker([p.lat, p.lng], { radius: 8, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.9 }).addTo(statsLeafletMap);
-    marker.bindPopup(`<strong>${p.nombre || 'Cliente'}</strong><br>${p.fase || ''}`);
-    bounds.push([p.lat, p.lng]);
-  });
-  if (bounds.length) statsLeafletMap.fitBounds(bounds, { padding: [30,30] });
 }
 
 // ==================== MODAL HELPERS ====================
