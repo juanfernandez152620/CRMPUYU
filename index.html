@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>PUYU</title>
+
+<!-- PWA: esto es lo que hace que Chrome ofrezca "Instalar" de verdad en vez
+     de solo "Crear acceso directo", y lo que le pone el ícono a la app. Los
+     archivos manifest.json, sw.js e icon-*.png tienen que subirse junto con
+     este Index.html, en la misma carpeta, al mismo proyecto de Vercel. -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0ea5e9">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PUYU">
+
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -2474,6 +2487,17 @@ function showToast(msg) {
   t.textContent = msg;
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 3000);
+}
+
+// ==================== PWA (instalar como app) ====================
+// Registrar el service worker es uno de los requisitos técnicos para que
+// Chrome ofrezca "Instalar" en vez de solo "Crear acceso directo". Este
+// worker no cachea nada (deja pasar todo directo a la red) para no arriesgar
+// que alguien vea datos viejos del CRM por una versión vieja guardada.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
 }
 </script>
 </body>
