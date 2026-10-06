@@ -115,6 +115,24 @@ body {
 .form-group textarea { resize: vertical; min-height: 70px; }
 .form-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 
+.phone-editor { margin-bottom: 4px; }
+.phone-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.phone-row select.phone-area { flex: 0 0 100px; padding: 14px 8px; }
+.phone-row input.phone-area-custom { flex: 0 0 74px; padding: 14px 8px; }
+.phone-row input.phone-local { flex: 1; min-width: 0; }
+.phone-row-remove {
+  flex: 0 0 auto; width: 40px; height: 48px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  background: #fef2f2; color: #b91c1c; font-size: 18px; line-height: 1; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+}
+.phone-add-btn {
+  border: 1.5px dashed var(--border); border-radius: var(--radius-sm); background: transparent;
+  color: var(--sky-d); font-weight: 600; font-size: 13px; padding: 10px; width: 100%; cursor: pointer;
+  margin-bottom: 14px;
+}
+.card-info-row .whatsapp-link { color: #25D366; display: inline-flex; align-items: center; margin-left: 6px; }
+.card-info-row .whatsapp-link svg { width: 15px; height: 15px; }
+
 .btn-primary {
   width: 100%; padding: 15px; background: linear-gradient(120deg, #0ea5e9, #38bdf8);
   border: none; border-radius: var(--radius-sm); color: white; font-family: 'DM Sans', sans-serif;
@@ -290,6 +308,19 @@ body {
 }
 .quick-chip.selected { border-color: var(--sky-d); background: var(--grad-brand); color: white; }
 .quick-chip .icon { flex-shrink: 0; }
+.quick-chip-green { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
+
+.guia-sugerencias { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.guia-sugerencia {
+  padding: 6px 12px; border-radius: 20px; border: 1.5px dashed var(--sky-d); background: #f0f9ff;
+  color: var(--sky-dd); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 12px; cursor: pointer;
+}
+.guia-resultados { margin-top: 14px; max-height: 50vh; overflow-y: auto; }
+.guia-card { background: white; border-radius: var(--radius-sm); padding: 12px 14px; box-shadow: var(--shadow); margin-bottom: 8px; }
+.guia-card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+.guia-card-tipo { font-weight: 700; font-size: 14px; }
+.guia-card-reco { font-size: 13px; color: var(--text); line-height: 1.4; }
+.guia-card-notas { display: flex; align-items: flex-start; gap: 5px; font-size: 11.5px; color: var(--text-muted); margin-top: 6px; font-style: italic; }
 .chip-select-group { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip-select {
   padding: 9px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: white;
@@ -541,11 +572,11 @@ body {
           <div class="user-avatar" id="user-avatar">J</div>
           <div>
             <div class="user-name" id="user-name-display">Juan</div>
-            <div class="refresh-indicator" id="refresh-indicator">Actualizando cada 20 seg.</div>
+            <div class="refresh-indicator" id="refresh-indicator">Actualizando cada 60 seg.</div>
           </div>
         </div>
         <div class="header-actions">
-          <button class="btn-icon btn-refresh" title="Refrescar" onclick="refreshCurrentView()">
+          <button class="btn-icon btn-refresh" title="Refrescar" onclick="refreshCache(true)">
             <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           </button>
           <button class="btn-icon btn-logout" title="Cerrar sesión" onclick="doLogout()">
@@ -614,36 +645,57 @@ body {
           <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Mis clientes
         </button>
+        <button class="quick-chip quick-chip-green" onclick="openQueVendoModal()">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          ¿Qué le vendo?
+        </button>
       </div>
       <div class="clients-container" id="clients-container"></div>
     </div>
 
     <!-- ===== VIEW: ESTADISTICAS ===== -->
     <div class="view" id="view-stats">
-      <div class="crm-quick-chips" id="stats-period-chips">
-        <button type="button" class="quick-chip selected" data-period="total" onclick="setStatsPeriod('total')">Total</button>
-        <button type="button" class="quick-chip" data-period="fecha" onclick="setStatsPeriod('fecha')">Fecha específica</button>
-        <button type="button" class="quick-chip" data-period="rango" onclick="setStatsPeriod('rango')">Rango de fechas</button>
+      <div class="calendar-tabs">
+        <button class="calendar-tab active" id="stats-subtab-resumen" onclick="setStatsSubTab('resumen')"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Resumen</button>
+        <button class="calendar-tab" id="stats-subtab-tareas" onclick="setStatsSubTab('tareas')"><svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> Todas las tareas</button>
       </div>
-      <div class="form-row" id="stats-fecha-unica-row" style="display:none;">
-        <div class="form-group">
-          <label style="font-weight:500;font-size:11px;">Fecha</label>
-          <input type="date" id="stats-fecha-unica" onchange="loadStats()">
+
+      <div id="stats-panel-resumen">
+        <div class="crm-quick-chips" id="stats-period-chips">
+          <button type="button" class="quick-chip selected" data-period="total" onclick="setStatsPeriod('total')">Total</button>
+          <button type="button" class="quick-chip" data-period="fecha" onclick="setStatsPeriod('fecha')">Fecha específica</button>
+          <button type="button" class="quick-chip" data-period="rango" onclick="setStatsPeriod('rango')">Rango de fechas</button>
         </div>
+        <div class="form-row" id="stats-fecha-unica-row" style="display:none;">
+          <div class="form-group">
+            <label style="font-weight:500;font-size:11px;">Fecha</label>
+            <input type="date" id="stats-fecha-unica" onchange="loadStats()">
+          </div>
+        </div>
+        <div class="form-row" id="stats-rango-row" style="display:none;">
+          <div class="form-group">
+            <label style="font-weight:500;font-size:11px;">Desde</label>
+            <input type="date" id="stats-fecha-desde" onchange="loadStats()">
+          </div>
+          <div class="form-group">
+            <label style="font-weight:500;font-size:11px;">Hasta</label>
+            <input type="date" id="stats-fecha-hasta" onchange="loadStats()">
+          </div>
+        </div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="stats-section-title">Desempeño por vendedor</div>
+        <div id="vendor-stats-container"></div>
+        <div class="stats-section-title">Actividad por día</div>
+        <div id="vendor-activity-container"></div>
       </div>
-      <div class="form-row" id="stats-rango-row" style="display:none;">
-        <div class="form-group">
-          <label style="font-weight:500;font-size:11px;">Desde</label>
-          <input type="date" id="stats-fecha-desde" onchange="loadStats()">
+
+      <div id="stats-panel-tareas" style="display:none;">
+        <div class="crm-search-wrap" style="margin-bottom:10px;">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="stats-tareas-search" placeholder="Buscar por título, cliente, notas..." oninput="filterAllTasksList()">
         </div>
-        <div class="form-group">
-          <label style="font-weight:500;font-size:11px;">Hasta</label>
-          <input type="date" id="stats-fecha-hasta" onchange="loadStats()">
-        </div>
+        <div id="stats-all-tasks-container"></div>
       </div>
-      <div class="stats-grid" id="stats-grid"></div>
-      <div class="stats-section-title">Desempeño por vendedor</div>
-      <div id="vendor-stats-container"></div>
     </div>
 
     <div class="bottom-nav">
@@ -708,15 +760,14 @@ body {
       <label>Nombre de Contacto</label>
       <input type="text" id="edit-contacto">
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Teléfono</label>
-        <input type="tel" id="edit-telefono">
-      </div>
-      <div class="form-group">
-        <label>Rubro</label>
-        <input type="text" id="edit-rubro">
-      </div>
+    <div class="form-group">
+      <label>Teléfono <span class="form-hint" style="font-weight:400;">(podés cargar más de uno)</span></label>
+      <div id="edit-telefono-editor" class="phone-editor"></div>
+      <button type="button" class="phone-add-btn" onclick="addPhoneRow('edit-telefono-editor')">+ Agregar otro número</button>
+    </div>
+    <div class="form-group">
+      <label>Rubro</label>
+      <input type="text" id="edit-rubro">
     </div>
     <div class="form-group">
       <label>Email</label>
@@ -791,15 +842,14 @@ body {
       <label>Nombre de Empresa (opcional)</label>
       <input type="text" id="c-empresa" placeholder="Ej: Electrohogar Sur">
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Dirección (opcional)</label>
-        <input type="text" id="c-direccion" placeholder="Ej: Av. Central 450">
-      </div>
-      <div class="form-group">
-        <label>Teléfono</label>
-        <input type="tel" id="c-telefono" placeholder="555-0000">
-      </div>
+    <div class="form-group">
+      <label>Dirección (opcional)</label>
+      <input type="text" id="c-direccion" placeholder="Ej: Av. Central 450">
+    </div>
+    <div class="form-group">
+      <label>Teléfono <span class="form-hint" style="font-weight:400;">(podés cargar más de uno)</span></label>
+      <div id="c-telefono-editor" class="phone-editor"></div>
+      <button type="button" class="phone-add-btn" onclick="addPhoneRow('c-telefono-editor')">+ Agregar otro número</button>
     </div>
 
     <div class="modal-buttons">
@@ -938,6 +988,7 @@ body {
       <label>Notas</label>
       <textarea id="task-notas" rows="2"></textarea>
     </div>
+    <div id="task-geo-status" class="geo-status pending" style="display:none;"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Buscando tu ubicación…</div>
 
     <div class="modal-buttons">
       <button class="btn-modal-cancel" onclick="closeModal('modal-task')">Cerrar</button>
@@ -1018,11 +1069,38 @@ body {
   </div>
 </div>
 
+<!-- ===== MODAL: ¿QUÉ LE VENDO? (GUIA DE VENTAS) ===== -->
+<div class="modal-overlay" id="modal-que-vendo">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>¿Qué le vendo?</span></div>
+    <p class="modal-subtitle">Escribí el tipo de negocio o rubro del cliente (aunque tenga alguna letra de más o de menos, lo vamos a encontrar igual).</p>
+
+    <div class="crm-search-wrap" style="margin-bottom:0;">
+      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="que-vendo-search" placeholder="Ej: kiosco, gimnasio, ferretería, veterinaria..." oninput="onQueVendoInput()" autocomplete="off">
+    </div>
+    <div class="guia-sugerencias" id="que-vendo-sugerencias" style="display:none;"></div>
+
+    <div class="guia-resultados" id="que-vendo-resultados"></div>
+
+    <div class="modal-buttons">
+      <button class="btn-modal-cancel" onclick="closeModal('modal-que-vendo')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // IMPORTANTE: reemplazar por la URL /exec del NUEVO proyecto de Apps Script
 // (el que se crea desde Extensions > Apps Script dentro de la planilla nueva,
 // no un proyecto standalone) una vez que lo despliegues como Web App.
-const API_URL = "https://script.google.com/macros/s/AKfycbxuUb1rhhplO44zmB9MsRtjXi3ELCKKNxmCgiE02mvw_xKvjEEqD1MnJb5oYQeL0oSp/exec";
+const API_URL = "PEGA_ACA_LA_URL_EXEC_DEL_NUEVO_DEPLOYMENT";
+
+// URL /exec del Apps Script APARTE de la Guía de Ventas (CodigoGuiaVentas.gs,
+// con su propia planilla y su propia implementación -- no tiene nada que
+// ver con el Apps Script del CRM de arriba). Se usa solo para "¿Qué le
+// vendo?", que es de solo lectura.
+const GUIA_API_URL = "PEGA_ACA_LA_URL_EXEC_DE_LA_GUIA_DE_VENTAS";
 
 // ==================== ICONOS (SVG, estilo outline, sin emojis) ====================
 const ICONS = {
@@ -1067,8 +1145,21 @@ function icon(name, size, cls) {
 let currentUser = null;
 let clients = [];
 let vendedores = [];
-let tareasCache = [];
-let refreshTimer = null;
+// TODAS las tareas (pasadas, futuras, canceladas) en un solo array: la
+// fuente única de verdad. Agenda/Mes/Estadísticas filtran esto en el
+// navegador -- nadie vuelve a pedirle tareas a Apps Script por rango de
+// fecha, así se elimina esa categoría entera de llamadas de red.
+let allTareas = [];
+let cacheRefreshTimer = null;
+let lastCacheSync = null;
+// Guía de ventas ("¿Qué le vendo?"): se trae UNA sola vez por sesión (no
+// cada 60s como el resto) porque es casi estática -- solo cambia si alguien
+// edita la hoja "GuiaVentas" a mano. El índice de búsqueda se precalcula una
+// sola vez cuando llegan los datos, así cada letra que tipeás no recalcula
+// todo de nuevo.
+let guiaVentas = [];
+let guiaIndex = [];
+let guiaVentasCargando = false;
 let pendingDeleteId = null;
 let currentView = 'calendario';
 let calendarTab = 'agenda';
@@ -1076,10 +1167,11 @@ let agendaMode = 'dia';
 let agendaDate = new Date();
 let monthViewDate = new Date();
 let selectedMonthDay = new Date();
-let monthTareasCache = [];
 let step3Values = { prioridad: 'Normal', tipoLead: 'Cold' };
 let lastCapturedGeo = null;
+let lastCapturedGeoTarea = null;
 let miniLeafletMap = null;
+let statsSubTab = 'resumen';
 
 // ==================== AUTH ====================
 async function doLogin() {
@@ -1120,10 +1212,11 @@ document.getElementById('login-pass').addEventListener('keydown', e => { if (e.k
 document.getElementById('login-user').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('login-pass').focus(); });
 
 function doLogout() {
-  clearInterval(refreshTimer);
+  clearInterval(cacheRefreshTimer);
   localStorage.removeItem('puyu_user');
   currentUser = null;
   clients = [];
+  allTareas = [];
   document.getElementById('screen-main').classList.remove('active');
   document.getElementById('screen-login').classList.add('active');
   document.getElementById('login-user').value = '';
@@ -1141,12 +1234,17 @@ function showMainScreen() {
   agendaDate = new Date();
   document.getElementById('agenda-date').value = toDateInputValue(agendaDate);
 
-  loadVendedores();
-  fetchClients(true);
-  renderAgenda();
+  pedirPermisoNotificaciones();
+  refreshCache(true);
+  cargarGuiaVentas();
 
-  clearInterval(refreshTimer);
-  refreshTimer = setInterval(() => refreshCurrentView(false), 20000);
+  clearInterval(cacheRefreshTimer);
+  // Un solo pedido cada 60s que trae TODO (clientes + tareas + vendedores) y
+  // repinta lo que esté en pantalla con esos datos, sin pedir nada de nuevo
+  // por cada cambio de vista/tab. Esto es a propósito bastante más espaciado
+  // que antes (era cada 20s) porque la app se usa con internet malo en la
+  // calle y la idea es depender lo menos posible de la red.
+  cacheRefreshTimer = setInterval(() => refreshCache(false), 60000);
 }
 
 (function() {
@@ -1170,6 +1268,15 @@ async function apiPost(payload) {
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(payload)
   });
+  return res.json();
+}
+
+// Mismo patrón que apiGet, pero apuntando al Apps Script APARTE de la Guía
+// de Ventas (GUIA_API_URL) -- un proyecto, una planilla y un deployment
+// totalmente distintos del CRM, para no tocar nada que ya funciona.
+async function apiGetGuia(action, params) {
+  const qs = new URLSearchParams(Object.assign({ action }, params || {})).toString();
+  const res = await fetch(`${GUIA_API_URL}?${qs}`, { redirect: 'follow' });
   return res.json();
 }
 
@@ -1219,7 +1326,11 @@ function switchView(viewName) {
   else if (viewName === 'crm') { fab.style.display = 'block'; fab.textContent = '+ Crear Nueva Lead'; }
   else { fab.style.display = 'none'; }
 
-  refreshCurrentView(true);
+  // Cambiar de vista NO pide nada a la red: todo sale de lo que ya está en
+  // memoria (se actualiza solo cada 60s, o al toque después de crear/editar
+  // algo). Si todavía no hay nada cargado (primer render antes de que
+  // termine el primer refreshCache), no hay drama: cuando llegue, se repinta.
+  renderActiveViewFromCache();
 }
 
 function onFabClick() {
@@ -1227,10 +1338,10 @@ function onFabClick() {
   else if (currentView === 'crm') openCreateModalStep1();
 }
 
-function refreshCurrentView(showLoading = false) {
+function renderActiveViewFromCache() {
   if (currentView === 'calendario') refreshCalendarActiveTab();
-  else if (currentView === 'crm') fetchClients(showLoading);
-  else if (currentView === 'stats') loadStats();
+  else if (currentView === 'crm') renderClients();
+  else if (currentView === 'stats') renderAllStats();
 }
 
 function refreshCalendarActiveTab() {
@@ -1238,21 +1349,13 @@ function refreshCalendarActiveTab() {
   else renderMonthView();
 }
 
-// ==================== VENDEDORES ====================
-async function loadVendedores() {
-  try {
-    const res = await apiGet('get_vendedores');
-    if (res.status === 'success') vendedores = res.data || [];
-  } catch (e) {}
-}
-
-function nombreVendedor(username) {
-  const v = vendedores.find(v => v.username === username);
-  return v ? (v.nombreCompleto || v.username) : username;
-}
-
-// ==================== CLIENTES ====================
-async function fetchClients(showLoading = false) {
+// ==================== CACHÉ CENTRAL ====================
+// Un solo lugar que trae clientes + vendedores + tareas (TODAS, sin filtro
+// de fecha) y repinta lo que esté en pantalla. Se llama: (1) una vez al
+// entrar, (2) cada 60s en el fondo, y (3) inmediatamente después de que
+// cualquier alta/edición/baja de cliente o tarea confirme bien, para que el
+// cambio se vea al toque sin esperar el próximo tick.
+async function refreshCache(showLoading = false) {
   const ind = document.getElementById('refresh-indicator');
   if (showLoading) {
     ind.textContent = 'Actualizando...';
@@ -1260,21 +1363,39 @@ async function fetchClients(showLoading = false) {
     renderSkeletons();
   }
   try {
-    const res = await apiGet('get_clientes');
-    if (res.status === 'success') {
-      // El backend ya trae los vendedores asignados de cada cliente en la misma
-      // respuesta (campo _vendedores), así que no hace falta pedirlos cliente
-      // por cliente: eso disparaba una llamada extra por cada cliente cargado
-      // y era lo que saturaba a Apps Script.
-      clients = res.data || [];
-      renderClients();
-      const now = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-      ind.textContent = `Último sync: ${now}`;
-      ind.className = 'refresh-indicator';
-    }
+    const [resClientes, resVendedores, resTareas] = await Promise.all([
+      apiGet('get_clientes'),
+      apiGet('get_vendedores'),
+      // incluirCanceladas: true porque el caché central tiene que tener TODO
+      // -- las vistas de Agenda/Mes siguen ocultando las canceladas ellas
+      // mismas, pero Estadísticas (lista completa, actividad por día) las
+      // necesita para no perder el historial.
+      apiGet('get_tareas', { incluirCanceladas: 'true' })
+    ]);
+    if (resClientes.status === 'success') clients = resClientes.data || [];
+    if (resVendedores.status === 'success') vendedores = resVendedores.data || [];
+    if (resTareas.status === 'success') allTareas = resTareas.data || [];
+
+    lastCacheSync = new Date();
+    renderActiveViewFromCache();
+    verificarNotificaciones();
+
+    const now = lastCacheSync.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    ind.textContent = `Último sync: ${now}`;
+    ind.className = 'refresh-indicator';
   } catch (e) {
     ind.textContent = 'Error al conectar. Reintentando...';
   }
+}
+
+// Alias retrocompatibles por si queda alguna referencia vieja suelta --
+// ambos ahora simplemente refrescan el caché entero.
+async function fetchClients(showLoading = false) { await refreshCache(showLoading); }
+async function loadVendedores() { if (!vendedores.length) await refreshCache(false); }
+
+function nombreVendedor(username) {
+  const v = vendedores.find(v => v.username === username);
+  return v ? (v.nombreCompleto || v.username) : username;
 }
 
 // El backend guarda las fechas de Clientes como texto "dd/MM/yyyy" (formatDate en Apps Script).
@@ -1548,7 +1669,7 @@ function renderCard(c) {
       </div>
       <div class="card-info">
         <div class="card-info-row">${icon('user', 14)}<span class="label">Contacto</span><span>${c['Nombre de contacto'] || '—'}</span></div>
-        <div class="card-info-row">${icon('phone', 14)}<span class="label">Tel.</span><span>${c['Numero de telefono'] || '—'}</span></div>
+        <div class="card-info-row">${icon('phone', 14)}<span class="label">Tel.</span><span>${formatTelefonoDisplay(c['Numero de telefono']) || '—'}${whatsappBadgesHtml(c['Numero de telefono'])}</span></div>
         <div class="card-info-row">${icon('mail', 14)}<span class="label">Email</span><span>${c['Email'] || '—'}</span></div>
         <div class="card-info-row">${icon('mapPin', 14)}<span class="label">Dir.</span><span>${c['Direccion del local'] || '—'}</span></div>
         <div class="card-info-row">${icon('tag', 14)}<span class="label">Rubro</span><span>${c['Rubro'] || '—'} · ${tipoTag}</span></div>
@@ -1616,7 +1737,7 @@ async function openEditModal(client) {
   document.getElementById('edit-client-id').value = client['id'];
   document.getElementById('edit-empresa').value = client['Nombre de empresa'] || '';
   document.getElementById('edit-contacto').value = client['Nombre de contacto'] || '';
-  document.getElementById('edit-telefono').value = client['Numero de telefono'] || '';
+  renderPhoneEditor('edit-telefono-editor', client['Numero de telefono'] || '');
   document.getElementById('edit-email').value = client['Email'] || '';
   document.getElementById('edit-direccion').value = client['Direccion del local'] || '';
   document.getElementById('edit-rubro').value = client['Rubro'] || '';
@@ -1705,13 +1826,15 @@ async function confirmEdit() {
   const btn = document.getElementById('btn-confirm-edit');
   const attrs = {};
   const map = {
-    'edit-empresa': 'Nombre de empresa', 'edit-contacto': 'Nombre de contacto', 'edit-telefono': 'Numero de telefono',
+    'edit-empresa': 'Nombre de empresa', 'edit-contacto': 'Nombre de contacto',
     'edit-email': 'Email', 'edit-direccion': 'Direccion del local', 'edit-rubro': 'Rubro', 'edit-necesidad': 'Dolor/Necesidad'
   };
   Object.keys(map).forEach(elId => {
     const val = document.getElementById(elId).value.trim();
     if (val) attrs[map[elId]] = val;
   });
+  const telefonos = getPhoneEditorValue('edit-telefono-editor');
+  if (telefonos) attrs['Numero de telefono'] = telefonos;
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Guardando...';
   try {
     await apiPost({ action: 'general_edit', id, ClientAtributes: attrs });
@@ -1741,6 +1864,114 @@ async function confirmDelete() {
   finally { btn.disabled = false; btn.textContent = 'Eliminar'; pendingDeleteId = null; }
 }
 
+// ==================== TELEFONOS / WHATSAPP ====================
+// Se guarda como "COD-RESTO" por cada número (ej: "381-4551234"), separados
+// por coma si hay más de uno: "381-4551234,11-40001234". Los números que ya
+// estaban cargados como texto libre (de antes de este cambio) se muestran y
+// se intentan formatear para WhatsApp igual, de la mejor manera posible.
+const CODIGOS_AREA = ['381', '11', '351', '341', '261', '291', '221', '223'];
+
+function parseTelefonos(raw) {
+  const str = String(raw || '').trim();
+  if (!str) return [];
+  return str.split(',').map(p => p.trim()).filter(Boolean).map(p => {
+    const m = p.match(/^(\d{2,4})-(\d{4,10})$/);
+    if (m) return { area: m[1], local: m[2], raw: p };
+    return { area: '', local: '', raw: p };
+  });
+}
+
+function phoneAreaOptionsHtml(selected) {
+  let html = CODIGOS_AREA.map(c => `<option value="${c}" ${c === selected ? 'selected' : ''}>${c}</option>`).join('');
+  html += `<option value="otro" ${selected === 'otro' ? 'selected' : ''}>Otro</option>`;
+  return html;
+}
+
+function addPhoneRow(containerId, entrada) {
+  entrada = entrada || {};
+  const cont = document.getElementById(containerId);
+  const row = document.createElement('div');
+  row.className = 'phone-row';
+  const esLegacy = !entrada.area && entrada.raw;
+  const areaVal = entrada.area || '381';
+  const seleccion = esLegacy ? 'otro' : (CODIGOS_AREA.includes(areaVal) ? areaVal : 'otro');
+  const customVal = esLegacy ? '' : (CODIGOS_AREA.includes(areaVal) ? '' : areaVal);
+  const localVal = esLegacy ? entrada.raw : (entrada.local || '');
+  row.innerHTML = `
+    <select class="phone-area" onchange="onPhoneAreaChange(this)">${phoneAreaOptionsHtml(seleccion)}</select>
+    <input type="text" class="phone-area-custom" placeholder="Cód." value="${customVal}" inputmode="numeric" style="${seleccion === 'otro' ? '' : 'display:none;'}">
+    <input type="tel" class="phone-local" placeholder="Resto del número" value="${localVal}" inputmode="numeric">
+    <button type="button" class="phone-row-remove" title="Quitar" onclick="this.parentElement.remove()">&times;</button>
+  `;
+  cont.appendChild(row);
+}
+
+function onPhoneAreaChange(select) {
+  const custom = select.parentElement.querySelector('.phone-area-custom');
+  custom.style.display = select.value === 'otro' ? '' : 'none';
+}
+
+function renderPhoneEditor(containerId, storedValue) {
+  const cont = document.getElementById(containerId);
+  cont.innerHTML = '';
+  const entradas = parseTelefonos(storedValue);
+  if (!entradas.length) { addPhoneRow(containerId, null); return; }
+  entradas.forEach(e => addPhoneRow(containerId, e));
+}
+
+function getPhoneEditorValue(containerId) {
+  const cont = document.getElementById(containerId);
+  const partes = [];
+  cont.querySelectorAll('.phone-row').forEach(row => {
+    const select = row.querySelector('.phone-area');
+    const custom = row.querySelector('.phone-area-custom');
+    const localRaw = row.querySelector('.phone-local').value.trim();
+    if (!localRaw) return;
+    const area = (select.value === 'otro' ? custom.value : select.value).replace(/\D/g, '');
+    if (area) partes.push(`${area}-${localRaw.replace(/\D/g, '')}`);
+    else partes.push(localRaw);
+  });
+  return partes.join(',');
+}
+
+// Arma el número en formato internacional que necesita wa.me (54 9 + área + número).
+// Con los números viejos en texto libre hacemos lo que podemos: sacamos el 0 de
+// larga distancia y el 15 de celular si están, y le ponemos el 54 9 adelante.
+function digitsForWhatsapp(entry) {
+  if (entry.area && entry.local) return '549' + entry.area + entry.local;
+  let d = String(entry.raw || '').replace(/\D/g, '');
+  if (!d) return null;
+  if (d.startsWith('54')) {
+    d = d.slice(2);
+    if (!d.startsWith('9')) d = '9' + d;
+    return '54' + d;
+  }
+  d = d.replace(/^0/, '');
+  d = d.replace(/^(\d{2,4})15/, '$1');
+  return '549' + d;
+}
+
+function formatTelefonoDisplay(raw) {
+  const entradas = parseTelefonos(raw);
+  if (!entradas.length) return null;
+  return entradas.map(e => e.area ? `${e.area}-${e.local}` : e.raw).join(', ');
+}
+
+function iconWhatsapp(size) {
+  const s = size || 15;
+  return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="currentColor"><path d="M17.47 14.38c-.29-.15-1.7-.84-1.97-.93-.26-.1-.46-.15-.65.15-.2.29-.75.93-.92 1.12-.17.2-.34.22-.63.07-.29-.14-1.22-.45-2.32-1.43-.86-.76-1.44-1.7-1.6-1.99-.17-.29-.02-.44.13-.59.13-.13.29-.34.44-.51.15-.17.2-.29.29-.49.1-.2.05-.37-.02-.51-.07-.15-.65-1.58-.9-2.16-.24-.58-.48-.5-.65-.5-.17-.01-.37-.01-.56-.01-.2 0-.51.07-.78.37-.26.29-1.02 1-1.02 2.44 0 1.44 1.05 2.83 1.2 3.03.15.2 2.06 3.14 4.98 4.4.7.3 1.24.48 1.67.61.7.22 1.34.19 1.84.12.56-.08 1.7-.7 1.94-1.37.24-.68.24-1.26.17-1.38-.07-.12-.26-.2-.55-.34z"/><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.9.53 3.68 1.44 5.2L2 22l4.94-1.4a9.9 9.9 0 0 0 5.08 1.4c5.52 0 10-4.48 10-10S17.54 2 12.02 2zm0 18.1c-1.62 0-3.13-.44-4.43-1.2l-.32-.19-2.93.83.85-2.85-.21-.33a8.07 8.07 0 0 1-1.26-4.36c0-4.46 3.63-8.08 8.1-8.08 4.46 0 8.08 3.62 8.08 8.08 0 4.46-3.62 8.1-8.08 8.1z"/></svg>`;
+}
+
+function whatsappBadgesHtml(raw) {
+  const entradas = parseTelefonos(raw);
+  if (!entradas.length) return '';
+  return entradas.map(e => {
+    const digits = digitsForWhatsapp(e);
+    if (!digits) return '';
+    return `<a class="whatsapp-link" href="https://wa.me/${digits}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Abrir WhatsApp">${iconWhatsapp()}</a>`;
+  }).join('');
+}
+
 // ==================== GEOLOCALIZACION ====================
 function getCurrentPosition() {
   return new Promise((resolve, reject) => {
@@ -1749,10 +1980,302 @@ function getCurrentPosition() {
   });
 }
 
+// ==================== NOTIFICACIONES ====================
+// Ojo con esto: solo funciona mientras la PWA está abierta (o en segundo
+// plano si el celular la dejó viva), no es un push real del servidor -- para
+// eso haría falta un backend con claves push y Apps Script no da para eso.
+// Con que quede andando mientras la app está abierta/instalada ya cubre el
+// uso real: se abre a la mañana y se deja de fondo en el celular.
+
+function pedirPermisoNotificaciones() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function misVendedoresIncluyen(campoVendedores) {
+  return String(campoVendedores || '').split(',').map(s => s.trim()).includes(currentUser);
+}
+
+async function verificarNotificaciones() {
+  if (!currentUser) return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  if (!('serviceWorker' in navigator)) return;
+  let reg;
+  try { reg = await navigator.serviceWorker.ready; } catch { return; }
+
+  const ahora = new Date();
+  const hoyKey = dayKey(ahora);
+
+  // 1) Resumen a las 8AM con las tareas del día (una sola vez por día).
+  const digestFlag = 'notif_digest_' + hoyKey;
+  if (ahora.getHours() >= 8 && !localStorage.getItem(digestFlag)) {
+    const inicioHoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 0, 0, 0);
+    const finHoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 23, 59, 59);
+    const tareasHoy = getTareasEnRango(inicioHoy, finHoy, false)
+      .filter(t => misVendedoresIncluyen(t['VendedoresAsignados']));
+    if (tareasHoy.length) {
+      const detalle = tareasHoy.slice(0, 5).map(t => '• ' + t['Titulo']).join('\n') + (tareasHoy.length > 5 ? `\n...y ${tareasHoy.length - 5} más` : '');
+      reg.showNotification(`Tenés ${tareasHoy.length} tarea(s) hoy`, { body: detalle, icon: 'icon-192.png', tag: 'digest-' + hoyKey });
+    }
+    localStorage.setItem(digestFlag, '1');
+  }
+
+  // 2) y 3): tareas mías, no canceladas, chequeando inicio y fin.
+  const misTareas = allTareas.filter(t => misVendedoresIncluyen(t['VendedoresAsignados']) && t['Estado'] !== 'Cancelada');
+  const treintaMin = 30 * 60 * 1000;
+
+  misTareas.forEach(t => {
+    const idTarea = t['id'];
+    const inicio = new Date(t['FechaHoraInicio']);
+    const fin = new Date(t['FechaHoraFin']);
+    if (isNaN(inicio) || isNaN(fin)) return;
+
+    const startFlag = 'notif_start_' + idTarea;
+    if (ahora >= inicio && ahora < fin && !localStorage.getItem(startFlag)) {
+      reg.showNotification('Arrancó: ' + t['Titulo'], { body: 'Tarea programada para ahora.', icon: 'icon-192.png', tag: 'start-' + idTarea });
+      localStorage.setItem(startFlag, '1');
+    }
+
+    if (ahora >= fin && t['Estado'] !== 'Hecha') {
+      const endFlag = 'notif_end_' + idTarea;
+      const ultimoAviso = Number(localStorage.getItem(endFlag) || 0);
+      if (ahora.getTime() - ultimoAviso > treintaMin) {
+        reg.showNotification('¿Completaste esta tarea?', { body: t['Titulo'], icon: 'icon-192.png', tag: 'end-' + idTarea });
+        localStorage.setItem(endFlag, String(ahora.getTime()));
+      }
+    }
+  });
+
+  limpiarFlagsNotificacionesViejos();
+}
+
+// Para que localStorage no se llene para siempre: cada tanto borramos los
+// flags de tareas que ya no están en el caché (viejas / eliminadas).
+let ultimaLimpiezaNotif = 0;
+function limpiarFlagsNotificacionesViejos() {
+  const ahora = Date.now();
+  if (ahora - ultimaLimpiezaNotif < 10 * 60 * 1000) return;
+  ultimaLimpiezaNotif = ahora;
+  const idsVivos = new Set(allTareas.map(t => String(t['id'])));
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const key = localStorage.key(i);
+    if (!key) continue;
+    const m = key.match(/^notif_(start|end)_(.+)$/);
+    if (m && !idsVivos.has(m[2])) localStorage.removeItem(key);
+  }
+}
+
+// ==================== GUIA DE VENTAS ("¿QUÉ LE VENDO?") ====================
+// Todo el buscador (normalización, tolerancia a errores de tipeo, ranking)
+// corre aquí en el navegador sobre los datos que se bajaron una sola vez al
+// entrar (cargarGuiaVentas, llamado desde showMainScreen). Así el buscador
+// responde al toque sin esperar nunca a Apps Script.
+
+async function cargarGuiaVentas() {
+  if (guiaVentasCargando || guiaVentas.length) return;
+  guiaVentasCargando = true;
+  try {
+    const res = await apiGetGuia('get_guia_ventas');
+    if (res.status === 'success') {
+      guiaVentas = res.data || [];
+      buildGuiaIndex();
+    }
+  } catch (e) {
+    // No pasa nada grave: si falla, el botón "¿Qué le vendo?" reintenta
+    // solo la próxima vez que se abra el modal.
+  } finally {
+    guiaVentasCargando = false;
+  }
+}
+
+// Saca tildes y pasa a minúsculas para que "cervecería" y "serveseria"
+// compitan en igualdad de condiciones.
+function normTxt(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+// Distancia de edición (Levenshtein), para perdonar errores de tipeo que la
+// lista de tags todavía no previó.
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  if (!m) return n;
+  if (!n) return m;
+  let prev = new Array(n + 1);
+  for (let j = 0; j <= n; j++) prev[j] = j;
+  for (let i = 1; i <= m; i++) {
+    let curr = [i];
+    for (let j = 1; j <= n; j++) {
+      curr[j] = a[i-1] === b[j-1] ? prev[j-1] : 1 + Math.min(prev[j-1], prev[j], curr[j-1]);
+    }
+    prev = curr;
+  }
+  return prev[n];
+}
+
+// Cuánta distancia se perdona según el largo de la palabra (para no hacer
+// matchear "pos" con cualquier cosa de 3 letras).
+function toleranciaPorLargo(w) {
+  if (w.length <= 3) return 0;
+  if (w.length <= 6) return 1;
+  return 2;
+}
+
+// Precalcula, por cada fila de la guía, sus "tokens" (tags + palabras del
+// tipo de negocio/categoría/recomendación) ya normalizados, para no repetir
+// ese trabajo con cada letra que se tipea.
+function buildGuiaIndex() {
+  guiaIndex = guiaVentas.map(row => {
+    const tags = String(row['Tags de Búsqueda'] || '').split(',').map(t => normTxt(t)).filter(Boolean);
+    const otras = normTxt([row['Tipo de Tienda / Negocio'], row['Categoría'], row['Recomendación / Enfoque de Venta']].join(' ')).split(/\s+/).filter(Boolean);
+    return { row, tokens: Array.from(new Set([...tags, ...otras])) };
+  });
+}
+
+// Puntaje de un token de la guía contra una palabra buscada: exacto > arranca
+// con > contiene > parecido (tolerando errores de tipeo).
+function puntajeToken(token, palabra) {
+  if (!token || !palabra) return 0;
+  if (token === palabra) return 10;
+  if (token.startsWith(palabra)) return 7;
+  if (token.includes(palabra)) return 5;
+  const tol = toleranciaPorLargo(palabra);
+  if (tol > 0) {
+    const dist = levenshtein(token, palabra);
+    if (dist <= tol) return 4 - dist;
+  }
+  return 0;
+}
+
+// Busca en toda la guía. Cada palabra de la búsqueda tiene que "pegarle" a
+// algo (tag, tipo, categoría o recomendación) de la fila -- si alguna
+// palabra no encuentra nada, esa fila queda afuera. Ordena de mayor a menor
+// puntaje.
+function buscarGuia(query) {
+  const palabras = normTxt(query).split(/\s+/).filter(Boolean);
+  if (!palabras.length) return [];
+  const resultados = [];
+  guiaIndex.forEach(({ row, tokens }) => {
+    let total = 0;
+    for (const palabra of palabras) {
+      let mejor = 0;
+      for (const token of tokens) {
+        const p = puntajeToken(token, palabra);
+        if (p > mejor) mejor = p;
+        if (mejor === 10) break;
+      }
+      if (mejor === 0) { total = -1; break; }
+      total += mejor;
+    }
+    if (total > 0) resultados.push({ row, score: total });
+  });
+  resultados.sort((a, b) => b.score - a.score);
+  return resultados.map(r => r.row);
+}
+
+// Sugerencias de autocomplete: de todos los tokens de la guía, los que más
+// se parecen a la ÚLTIMA palabra que se está tipeando, sin repetir.
+function sugerenciasGuia(query) {
+  const palabras = normTxt(query).split(/\s+/).filter(Boolean);
+  if (!palabras.length) return [];
+  const ultima = palabras[palabras.length - 1];
+  const vistos = new Set();
+  const puntuados = [];
+  guiaIndex.forEach(({ tokens }) => {
+    tokens.forEach(t => {
+      if (vistos.has(t)) return;
+      const p = puntajeToken(t, ultima);
+      if (p > 0) { vistos.add(t); puntuados.push({ t, p }); }
+    });
+  });
+  puntuados.sort((a, b) => b.p - a.p || a.t.localeCompare(b.t));
+  return puntuados.slice(0, 8).map(x => x.t);
+}
+
+function openQueVendoModal() {
+  document.getElementById('que-vendo-search').value = '';
+  document.getElementById('que-vendo-sugerencias').style.display = 'none';
+  renderQueVendoResultados(null);
+  openModal('modal-que-vendo');
+  if (!guiaVentas.length) cargarGuiaVentas();
+  setTimeout(() => document.getElementById('que-vendo-search').focus(), 150);
+}
+
+function onQueVendoInput() {
+  const q = document.getElementById('que-vendo-search').value;
+  const sugerenciasBox = document.getElementById('que-vendo-sugerencias');
+  if (!q.trim()) {
+    sugerenciasBox.style.display = 'none';
+    renderQueVendoResultados(null);
+    return;
+  }
+  if (!guiaVentas.length) {
+    sugerenciasBox.style.display = 'none';
+    renderQueVendoResultados(guiaVentasCargando ? 'cargando' : 'sin-datos');
+    return;
+  }
+  const sugs = sugerenciasGuia(q);
+  if (sugs.length) {
+    sugerenciasBox.innerHTML = sugs.map(s => `<button type="button" class="guia-sugerencia" onclick="aplicarSugerenciaGuia('${s.replace(/'/g, "\\'")}')">${s}</button>`).join('');
+    sugerenciasBox.style.display = 'flex';
+  } else {
+    sugerenciasBox.style.display = 'none';
+  }
+  renderQueVendoResultados(buscarGuia(q));
+}
+
+function aplicarSugerenciaGuia(termino) {
+  const input = document.getElementById('que-vendo-search');
+  const palabras = input.value.trim().split(/\s+/);
+  palabras[palabras.length - 1] = termino;
+  input.value = palabras.join(' ') + ' ';
+  document.getElementById('que-vendo-sugerencias').style.display = 'none';
+  renderQueVendoResultados(buscarGuia(input.value));
+  input.focus();
+}
+
+function renderQueVendoResultados(resultados) {
+  const container = document.getElementById('que-vendo-resultados');
+  if (resultados === null) {
+    container.innerHTML = `<div class="empty-state">${icon('zap', 40)}<p>Escribí un rubro, por ejemplo: kiosco, veterinaria, gimnasio, ferretería...</p></div>`;
+    return;
+  }
+  if (resultados === 'cargando') {
+    container.innerHTML = `<div class="empty-state">${icon('refresh', 40)}<p>Cargando la guía...</p></div>`;
+    return;
+  }
+  if (resultados === 'sin-datos') {
+    container.innerHTML = `<div class="empty-state">${icon('alertTriangle', 40)}<p>No se pudo cargar la guía todavía. Cerrá y abrí de nuevo este cartel para reintentar.</p></div>`;
+    return;
+  }
+  if (!resultados.length) {
+    container.innerHTML = `<div class="empty-state">${icon('search', 40)}<p>No encontré nada con eso. Probá con otra palabra.</p></div>`;
+    return;
+  }
+  container.innerHTML = resultados.slice(0, 30).map(r => `
+    <div class="guia-card">
+      <div class="guia-card-top">
+        <span class="guia-card-tipo">${r['Tipo de Tienda / Negocio'] || '—'}</span>
+        <span class="badge badge-vendedor">${r['Categoría'] || ''}</span>
+      </div>
+      <div class="guia-card-reco">${r['Recomendación / Enfoque de Venta'] || 'Sin recomendación cargada todavía.'}</div>
+      ${r['Notas del Vendedor'] ? `<div class="guia-card-notas">${icon('fileText', 12)} ${r['Notas del Vendedor']}</div>` : ''}
+    </div>`).join('');
+}
+
 // ==================== ALTA RAPIDA - PASO 1 ====================
 function openCreateModalStep1() {
-  ['c-contacto','c-notas','c-empresa','c-direccion','c-telefono'].forEach(id => document.getElementById(id).value = '');
+  ['c-contacto','c-notas','c-empresa','c-direccion'].forEach(id => document.getElementById(id).value = '');
+  renderPhoneEditor('c-telefono-editor', '');
   lastCapturedGeo = null;
+
+  // Por si el intento anterior se quedó esperando a Apps Script y el botón
+  // quedó pisado como "Creando...": abrir el formulario de nuevo siempre lo
+  // destraba, no depende de que la llamada vieja haya terminado.
+  const btn = document.getElementById('btn-confirm-create');
+  restoreBtn(btn, 'Guardar y agendar reunión');
+
   const geoStatus = document.getElementById('create-geo-status');
   geoStatus.className = 'geo-status pending';
   geoStatus.innerHTML = `${icon('mapPin', 16)} Buscando tu ubicación…`;
@@ -1771,10 +2294,7 @@ function openCreateModalStep1() {
 async function confirmCreateStep1() {
   const contacto = document.getElementById('c-contacto').value.trim();
   const notas = document.getElementById('c-notas').value.trim();
-  if (!contacto || !notas) { showToast('Nombre de contacto y Notas son obligatorios.'); return; }
-
-  const btn = document.getElementById('btn-confirm-create');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Creando...';
+  if (!contacto || !notas) { showToast('Faltan datos: completá Nombre de contacto y Notas antes de guardar.'); return; }
 
   const payload = {
     action: 'create',
@@ -1782,20 +2302,40 @@ async function confirmCreateStep1() {
     notasGenerales: notas,
     nombreEmpresa: document.getElementById('c-empresa').value.trim(),
     direccion: document.getElementById('c-direccion').value.trim(),
-    numeroTelefono: document.getElementById('c-telefono').value.trim(),
+    numeroTelefono: getPhoneEditorValue('c-telefono-editor'),
     representante: currentUser || ''
   };
   if (lastCapturedGeo) { payload.lat = lastCapturedGeo.lat; payload.lng = lastCapturedGeo.lng; payload.gpsAccuracy = lastCapturedGeo.gpsAccuracy; }
 
+  const btn = document.getElementById('btn-confirm-create');
+  const original = setBtnLoading(btn, 'Creando...');
+  const promesa = apiPost(payload);
+
+  const resultado = await conEsperaLimitada(promesa);
+
+  if (!resultado.llego) {
+    // Mismo criterio que con las tareas: no dejamos el botón trabado
+    // esperando para siempre. Como todavía no sabemos el id del cliente
+    // nuevo, no seguimos solos al paso 2 (agendar reunión) -- se puede hacer
+    // esa reunión a mano desde la ficha del cliente una vez que aparezca.
+    closeModal('modal-create-step1');
+    restoreBtn(btn, original);
+    showToast('Uh, se está tardando más de la cuenta... el cliente puede que se haya creado, o no 🤷 fijate en Clientes en un ratito.');
+    promesa.then(() => refreshCache(false)).catch(() => {});
+    return;
+  }
+
+  restoreBtn(btn, original);
   try {
-    const res = await apiPost(payload);
+    if (resultado.err) throw resultado.err;
+    const res = resultado.res;
+    if (res.status !== 'success') throw new Error(res.data || 'Error desconocido');
     closeModal('modal-create-step1');
     showToast('Cliente creado');
     const newId = res.data && res.data.id;
-    await fetchClients(false);
+    await refreshCache(false);
     openCreateStep2(newId, payload.nombreEmpresa || contacto);
   } catch { showToast('Error al crear el cliente.'); }
-  finally { btn.disabled = false; btn.textContent = 'Guardar y agendar reunión'; }
 }
 
 // ==================== ALTA RAPIDA - PASO 2 (AGENDAR REUNION) ====================
@@ -1821,7 +2361,7 @@ function skipStep2() {
 async function confirmCreateStep2() {
   const inicio = document.getElementById('step2-inicio').value;
   const fin = document.getElementById('step2-fin').value;
-  if (!inicio || !fin) { showToast('Elegí fecha y hora.'); return; }
+  if (!inicio || !fin) { showToast('Faltan datos: elegí fecha y hora antes de agendar.'); return; }
 
   if (esFechaDeHoy(inicio)) {
     pedirConfirmacionHoy(() => guardarReunionReal());
@@ -1859,6 +2399,7 @@ async function guardarReunionReal() {
     closeModal('modal-create-step2');
     restoreBtn(btn, original);
     showToast('Uh, se está tardando más de la cuenta... la reunión puede que se haya agendado, o no 🤷 fijate en un ratito.');
+    promesa.then(() => refreshCache(false)).catch(() => {});
     openCreateStep3(clienteId);
     return;
   }
@@ -1873,6 +2414,7 @@ async function guardarReunionReal() {
       showToast('Reunión agendada. Se envió la invitación de Calendar.');
     }
     closeModal('modal-create-step2');
+    await refreshCache(false);
     openCreateStep3(clienteId);
   } catch { showToast('No se pudo agendar la reunión.'); }
 }
@@ -2047,10 +2589,28 @@ function goToTodayMonth() {
   renderMonthView();
 }
 
+// Trae del caché central (allTareas) las tareas cuyo inicio cae en el rango
+// [desde, hasta], sin cancelar salvo que se pida explícitamente. Esto
+// reemplaza los pedidos por GET con desde/hasta -- ya no hace falta volver a
+// preguntarle nada a Apps Script para cambiar de día/semana/mes.
+function getTareasEnRango(desde, hasta, incluirCanceladas) {
+  return allTareas.filter(t => {
+    if (!incluirCanceladas && t['Estado'] === 'Cancelada') return false;
+    const d = new Date(t['FechaHoraInicio']);
+    if (isNaN(d)) return false;
+    if (desde && d < desde) return false;
+    if (hasta && d > hasta) return false;
+    return true;
+  });
+}
+
 function buildTasksByDay() {
+  const { gridStart, totalCells } = getMonthGridMeta(monthViewDate);
+  const gridEnd = new Date(gridStart);
+  gridEnd.setDate(gridStart.getDate() + totalCells - 1);
+  gridEnd.setHours(23, 59, 59, 999);
   const map = {};
-  monthTareasCache.forEach(t => {
-    if (t['Estado'] === 'Cancelada') return;
+  getTareasEnRango(gridStart, gridEnd).forEach(t => {
     const d = new Date(t['FechaHoraInicio']);
     const key = dayKey(d);
     (map[key] = map[key] || []).push(t);
@@ -2058,20 +2618,10 @@ function buildTasksByDay() {
   return map;
 }
 
-async function renderMonthView() {
+function renderMonthView() {
   document.getElementById('month-title').textContent = capitalize(monthViewDate.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' }));
-  document.getElementById('month-grid').innerHTML = '<div class="skeleton-card" style="grid-column:1/-1;"></div>';
 
   const { gridStart, totalCells, month } = getMonthGridMeta(monthViewDate);
-  const gridEnd = new Date(gridStart);
-  gridEnd.setDate(gridStart.getDate() + totalCells - 1);
-  gridEnd.setHours(23, 59, 59, 999);
-
-  try {
-    const res = await apiGet('get_tareas', { desde: gridStart.toISOString(), hasta: gridEnd.toISOString() });
-    monthTareasCache = res.data || [];
-  } catch (e) { monthTareasCache = []; }
-
   const tasksByDay = buildTasksByDay();
   renderMonthGrid(gridStart, totalCells, month, tasksByDay);
   renderSelectedDayTasks(tasksByDay);
@@ -2138,9 +2688,8 @@ function onAgendaDateChange() {
   if (val) { agendaDate = new Date(val + 'T00:00:00'); renderAgenda(); }
 }
 
-async function renderAgenda() {
+function renderAgenda() {
   const container = document.getElementById('agenda-container');
-  container.innerHTML = '<div class="skeleton-card"><div class="skel-line" style="height:14px;width:50%"></div><div class="skel-line" style="height:12px;width:80%"></div></div>';
 
   let desde, hasta;
   if (agendaMode === 'dia') {
@@ -2151,30 +2700,25 @@ async function renderAgenda() {
     hasta = new Date(desde.getTime() + 7 * 24 * 60 * 60 * 1000);
   }
 
-  try {
-    const res = await apiGet('get_tareas', { desde: desde.toISOString(), hasta: hasta.toISOString() });
-    tareasCache = res.data || [];
-    if (!tareasCache.length) {
-      container.innerHTML = `<div class="empty-state">${icon('calendar', 46)}<p>No hay tareas en este rango.</p></div>`;
-      return;
-    }
-    tareasCache.sort((a,b) => new Date(a['FechaHoraInicio']) - new Date(b['FechaHoraInicio']));
+  const tareasDelRango = getTareasEnRango(desde, hasta).sort((a,b) => new Date(a['FechaHoraInicio']) - new Date(b['FechaHoraInicio']));
 
-    if (agendaMode === 'dia') {
-      container.innerHTML = tareasCache.map(t => renderTaskCard(t)).join('');
-    } else {
-      let html = '';
-      let lastDay = '';
-      tareasCache.forEach(t => {
-        const d = new Date(t['FechaHoraInicio']);
-        const dayLabel = d.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' });
-        if (dayLabel !== lastDay) { html += `<div class="day-group-label">${dayLabel}</div>`; lastDay = dayLabel; }
-        html += renderTaskCard(t);
-      });
-      container.innerHTML = html;
-    }
-  } catch (e) {
-    container.innerHTML = `<div class="empty-state">${icon('alertTriangle', 46)}<p>No se pudieron cargar las tareas.</p></div>`;
+  if (!tareasDelRango.length) {
+    container.innerHTML = `<div class="empty-state">${icon('calendar', 46)}<p>No hay tareas en este rango.</p></div>`;
+    return;
+  }
+
+  if (agendaMode === 'dia') {
+    container.innerHTML = tareasDelRango.map(t => renderTaskCard(t)).join('');
+  } else {
+    let html = '';
+    let lastDay = '';
+    tareasDelRango.forEach(t => {
+      const d = new Date(t['FechaHoraInicio']);
+      const dayLabel = d.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' });
+      if (dayLabel !== lastDay) { html += `<div class="day-group-label">${dayLabel}</div>`; lastDay = dayLabel; }
+      html += renderTaskCard(t);
+    });
+    container.innerHTML = html;
   }
 }
 
@@ -2205,13 +2749,13 @@ function renderTaskCard(t) {
 
 async function marcarTareaHecha(id, btn) {
   const original = setBtnLoading(btn, '');
-  try { await apiPost({ action: 'editar_tarea', id, estado: 'Hecha' }); showToast('Tarea marcada como hecha'); refreshCalendarActiveTab(); }
+  try { await apiPost({ action: 'editar_tarea', id, estado: 'Hecha' }); showToast('Tarea marcada como hecha'); await refreshCache(false); }
   catch { showToast('Error al actualizar.'); restoreBtn(btn, original); }
 }
 
 async function cancelarTarea(id, btn) {
   const original = setBtnLoading(btn, '');
-  try { await apiPost({ action: 'eliminar_tarea', id }); showToast('Tarea cancelada'); refreshCalendarActiveTab(); }
+  try { await apiPost({ action: 'eliminar_tarea', id }); showToast('Tarea cancelada'); await refreshCache(false); }
   catch { showToast('Error al cancelar.'); restoreBtn(btn, original); }
 }
 
@@ -2256,6 +2800,27 @@ async function openTaskModal(t) {
     document.getElementById('task-notas').value = '';
     renderVendedorCheckboxes('task-vendedores-list', [currentUser]);
   }
+
+  // La ubicación solo se captura al crear (igual que con los clientes); al
+  // editar una tarea ya existente no tiene sentido pisarla.
+  const geoStatus = document.getElementById('task-geo-status');
+  lastCapturedGeoTarea = null;
+  if (t && t.id) {
+    geoStatus.style.display = 'none';
+  } else {
+    geoStatus.style.display = '';
+    geoStatus.className = 'geo-status pending';
+    geoStatus.innerHTML = `${icon('mapPin', 16)} Buscando tu ubicación…`;
+    getCurrentPosition().then(pos => {
+      lastCapturedGeoTarea = { lat: pos.coords.latitude, lng: pos.coords.longitude, gpsAccuracy: pos.coords.accuracy };
+      geoStatus.className = 'geo-status ok';
+      geoStatus.innerHTML = `${icon('mapPin', 16)} Ubicación capturada (precisión ~${Math.round(pos.coords.accuracy)}m)`;
+    }).catch(() => {
+      geoStatus.className = 'geo-status error';
+      geoStatus.innerHTML = `${icon('alertTriangle', 16)} No se pudo obtener tu ubicación.`;
+    });
+  }
+
   openModal('modal-task');
 }
 
@@ -2263,7 +2828,7 @@ async function confirmTask() {
   const titulo = document.getElementById('task-titulo').value.trim();
   const inicio = document.getElementById('task-inicio').value;
   const fin = document.getElementById('task-fin').value;
-  if (!titulo || !inicio || !fin) { showToast('Completá título, inicio y fin.'); return; }
+  if (!titulo || !inicio || !fin) { showToast('Faltan datos: completá título, inicio y fin antes de guardar.'); return; }
 
   if (esFechaDeHoy(inicio)) {
     pedirConfirmacionHoy(() => guardarTareaReal());
@@ -2288,8 +2853,16 @@ async function guardarTareaReal() {
   };
 
   const esEdicion = !!id;
-  if (esEdicion) payload.id = id;
-  else payload.creadoPor = currentUser;
+  if (esEdicion) {
+    payload.id = id;
+  } else {
+    payload.creadoPor = currentUser;
+    if (lastCapturedGeoTarea) {
+      payload.lat = lastCapturedGeoTarea.lat;
+      payload.lng = lastCapturedGeoTarea.lng;
+      payload.gpsAccuracy = lastCapturedGeoTarea.gpsAccuracy;
+    }
+  }
 
   const btn = document.getElementById('btn-confirm-task');
   const original = setBtnLoading(btn, esEdicion ? 'Guardando...' : 'Guardando...');
@@ -2305,7 +2878,7 @@ async function guardarTareaReal() {
     closeModal('modal-task');
     restoreBtn(btn, original);
     showToast('Uh, se está tardando más de la cuenta... la tarea puede que se haya guardado, o no 🤷 fijate en un ratito.');
-    promesa.then(() => refreshCalendarActiveTab()).catch(() => {});
+    promesa.then(() => refreshCache(false)).catch(() => {});
     return;
   }
 
@@ -2326,7 +2899,7 @@ async function guardarTareaReal() {
       }
     }
     closeModal('modal-task');
-    refreshCalendarActiveTab();
+    await refreshCache(false);
   } catch (e) {
     showToast('No se pudo guardar la tarea: ' + (e.message || 'error desconocido'));
   }
@@ -2382,19 +2955,55 @@ function countLeadsEnPeriodo() {
   return clients.length; // total
 }
 
-async function loadStats() {
-  document.getElementById('stats-grid').innerHTML = '<div class="skeleton-card"></div>';
-  try {
-    // Para poder contar leads por fecha de ingreso necesitamos la lista de
-    // clientes cargada; si todavía no se pidió (por ejemplo, se entró
-    // directo a Estadísticas sin pasar antes por el CRM), la pedimos ahora.
-    if (!clients.length) await fetchClients(false);
-    const statsRes = await apiGet('get_stats');
-    renderStatsGrid(statsRes.data);
-    renderVendorStats(statsRes.data);
-  } catch (e) {
-    document.getElementById('stats-grid').innerHTML = `<div class="empty-state">${icon('alertTriangle', 46)}<p>No se pudieron cargar las estadísticas.</p></div>`;
-  }
+// Todo esto ahora se calcula en el navegador con lo que ya está en el
+// caché (clients + allTareas), no le pedimos nada nuevo a Apps Script para
+// ver Estadísticas -- es instantáneo y funciona incluso si la última
+// sincronización fue hace rato.
+function computeStatsFromCache() {
+  let porFase = {}, porEstado = {}, porVendedor = {};
+  clients.forEach(c => {
+    const fase = c['Fase actual'] || 'Sin fase';
+    const estado = c['Estado'] || 'Sin estado';
+    const rep = c['Representante Inicial'] || 'Sin asignar';
+    porFase[fase] = (porFase[fase] || 0) + 1;
+    porEstado[estado] = (porEstado[estado] || 0) + 1;
+    if (!porVendedor[rep]) porVendedor[rep] = { total: 0, clientes: 0, leads: 0 };
+    porVendedor[rep].total++;
+    if (estado === 'Cliente') porVendedor[rep].clientes++; else porVendedor[rep].leads++;
+  });
+
+  let tareasPorVendedor = {};
+  allTareas.forEach(t => {
+    const vs = String(t['VendedoresAsignados'] || '').split(',').map(s => s.trim()).filter(Boolean);
+    vs.forEach(v => {
+      if (!tareasPorVendedor[v]) tareasPorVendedor[v] = { pendientes: 0, hechas: 0, canceladas: 0 };
+      if (t['Estado'] === 'Hecha') tareasPorVendedor[v].hechas++;
+      else if (t['Estado'] === 'Cancelada') tareasPorVendedor[v].canceladas++;
+      else tareasPorVendedor[v].pendientes++;
+    });
+  });
+
+  return { porFase, porEstado, porVendedor, tareasPorVendedor };
+}
+
+function renderAllStats() {
+  const data = computeStatsFromCache();
+  renderStatsGrid(data);
+  renderVendorStats(data);
+  renderActividadPorDia();
+  if (statsSubTab === 'tareas') renderAllTasksList();
+}
+// Nombre viejo, lo dejamos apuntando a la versión nueva por si queda algún
+// llamado suelto (por ejemplo los onchange= de los inputs de fecha).
+function loadStats() { renderAllStats(); }
+
+// % de tareas marcadas "Hecha" sobre el total no-canceladas, para un rango
+// de tareas dado (null si no hay ninguna tarea relevante en el rango).
+function calcCompletionPct(tareas) {
+  const relevantes = tareas.filter(t => t['Estado'] !== 'Cancelada');
+  if (!relevantes.length) return null;
+  const hechas = relevantes.filter(t => t['Estado'] === 'Hecha').length;
+  return Math.round((hechas / relevantes.length) * 100);
 }
 
 function renderStatsGrid(data) {
@@ -2404,12 +3013,26 @@ function renderStatsGrid(data) {
   const enNegociacion = (data.porFase || {})['Negociación'] || 0;
   const leadsPeriodo = countLeadsEnPeriodo();
 
+  const hoy0 = new Date(); hoy0.setHours(0,0,0,0);
+  const hoy1 = new Date(); hoy1.setHours(23,59,59,999);
+  const inicioSemana = new Date(hoy0);
+  inicioSemana.setDate(inicioSemana.getDate() - inicioSemana.getDay());
+  const finSemana = new Date(inicioSemana.getTime() + 7*24*60*60*1000 - 1);
+
+  const pctHoy = calcCompletionPct(getTareasEnRango(hoy0, hoy1, true));
+  const pctSemana = calcCompletionPct(getTareasEnRango(inicioSemana, finSemana, true));
+  const pctTotal = calcCompletionPct(allTareas);
+  const fmtPct = p => p === null ? '—' : `${p}%`;
+
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-tile"><div class="stat-num">${totalClientes}</div><div class="stat-label">Activos</div></div>
     <div class="stat-tile"><div class="stat-num">${clientesGanados}</div><div class="stat-label">Clientes</div></div>
     <div class="stat-tile"><div class="stat-num">${enFiltro}</div><div class="stat-label">En Filtro</div></div>
     <div class="stat-tile"><div class="stat-num">${enNegociacion}</div><div class="stat-label">En Negociación</div></div>
     <div class="stat-tile stat-tile-wide"><div class="stat-num">${leadsPeriodo}</div><div class="stat-label">Leads captados en el período elegido</div></div>
+    <div class="stat-tile"><div class="stat-num">${fmtPct(pctHoy)}</div><div class="stat-label">Tareas completadas hoy</div></div>
+    <div class="stat-tile"><div class="stat-num">${fmtPct(pctSemana)}</div><div class="stat-label">Completadas esta semana</div></div>
+    <div class="stat-tile stat-tile-wide"><div class="stat-num">${fmtPct(pctTotal)}</div><div class="stat-label">Completadas en total (histórico)</div></div>
   `;
 }
 
@@ -2434,6 +3057,146 @@ function renderVendorStats(data) {
         </div>
       </div>`;
   }).join('');
+}
+
+// ---- Actividad por día: qué días salió cada vendedor a cargar clientes
+// nuevos y qué días cargó tareas nuevas (por separado). Los clientes usan su
+// fecha de ingreso real; las tareas usan la fecha en que se CREÓ la tarea
+// (columna FechaCreacion -- si una tarea es de antes de que existiera esa
+// columna, se aproxima con la fecha de inicio de la tarea).
+function computeActividadPorVendedorYDia() {
+  const clientesPorVendedor = {};
+  clients.forEach(c => {
+    const rep = c['Representante Inicial'];
+    if (!rep) return;
+    const d = getIngresoDate(c);
+    if (!d) return;
+    (clientesPorVendedor[rep] = clientesPorVendedor[rep] || new Set()).add(dayKey(d));
+  });
+
+  const tareasPorVendedorDia = {};
+  allTareas.forEach(t => {
+    const creador = t['CreadoPor'];
+    if (!creador) return;
+    let fc = null;
+    if (t['FechaCreacion']) fc = parseFlexibleDate(t['FechaCreacion']) || new Date(t['FechaCreacion']);
+    if (!fc || isNaN(fc)) fc = new Date(t['FechaHoraInicio']);
+    if (!fc || isNaN(fc)) return;
+    (tareasPorVendedorDia[creador] = tareasPorVendedorDia[creador] || new Set()).add(dayKey(fc));
+  });
+
+  const todos = new Set([...Object.keys(clientesPorVendedor), ...Object.keys(tareasPorVendedorDia)]);
+  return Array.from(todos).map(username => ({
+    username,
+    diasClientes: Array.from(clientesPorVendedor[username] || []).sort().reverse(),
+    diasTareas: Array.from(tareasPorVendedorDia[username] || []).sort().reverse()
+  }));
+}
+
+function renderActividadPorDia() {
+  const container = document.getElementById('vendor-activity-container');
+  if (!container) return;
+  const datos = computeActividadPorVendedorYDia();
+  if (!datos.length) { container.innerHTML = '<p class="form-hint">Todavía no hay actividad registrada.</p>'; return; }
+
+  const fmtDias = dias => {
+    if (!dias.length) return '<span class="form-hint">Sin días registrados</span>';
+    const visibles = dias.slice(0, 12).map(k => {
+      const [y, m, dd] = k.split('-');
+      return `<span class="badge badge-vendedor">${dd}/${m}</span>`;
+    }).join('');
+    const resto = dias.length > 12 ? `<span class="badge badge-normal">+${dias.length - 12} más</span>` : '';
+    return visibles + resto;
+  };
+
+  container.innerHTML = datos.map(v => `
+    <div class="vendor-row">
+      <div class="vendor-row-top"><span class="vendor-row-name">${nombreVendedor(v.username)}</span></div>
+      <div style="margin-top:8px;">
+        <div class="form-hint" style="font-weight:600;margin-bottom:4px;">${icon('userPlus', 12)} Días con clientes nuevos (${v.diasClientes.length})</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">${fmtDias(v.diasClientes)}</div>
+        <div class="form-hint" style="font-weight:600;margin-bottom:4px;">${icon('calendar', 12)} Días con tareas nuevas (${v.diasTareas.length})</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;">${fmtDias(v.diasTareas)}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ---- Sub-tab "Todas las tareas": lista completa (todo el historial) con
+// buscador y la posibilidad de marcar/desmarcar completada sin salir de acá.
+let statsTaskSearch = '';
+
+function setStatsSubTab(tab) {
+  statsSubTab = tab;
+  document.getElementById('stats-subtab-resumen').classList.toggle('active', tab === 'resumen');
+  document.getElementById('stats-subtab-tareas').classList.toggle('active', tab === 'tareas');
+  document.getElementById('stats-panel-resumen').style.display = tab === 'resumen' ? 'block' : 'none';
+  document.getElementById('stats-panel-tareas').style.display = tab === 'tareas' ? 'block' : 'none';
+  if (tab === 'tareas') renderAllTasksList();
+}
+
+function filterAllTasksList() {
+  statsTaskSearch = document.getElementById('stats-tareas-search').value;
+  renderAllTasksList();
+}
+
+function renderAllTasksList() {
+  const container = document.getElementById('stats-all-tasks-container');
+  if (!container) return;
+  const q = (statsTaskSearch || '').trim().toLowerCase();
+  let list = allTareas.slice();
+  if (q) {
+    list = list.filter(t => {
+      const cliente = clients.find(c => String(c['id']) === String(t['ClienteId']));
+      const hay = [
+        t['Titulo'], t['Notas'], t['Tipo'],
+        cliente ? (cliente['Nombre de empresa'] || cliente['Nombre de contacto']) : ''
+      ].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  list.sort((a, b) => new Date(b['FechaHoraInicio']) - new Date(a['FechaHoraInicio']));
+
+  if (!list.length) {
+    container.innerHTML = `<div class="empty-state">${icon('search', 40)}<p>No hay tareas que coincidan.</p></div>`;
+    return;
+  }
+  container.innerHTML = list.map(t => renderStatsTaskRow(t)).join('');
+}
+
+function renderStatsTaskRow(t) {
+  const d = new Date(t['FechaHoraInicio']);
+  const fecha = isNaN(d) ? '—' : `${d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })} ${d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`;
+  const vendedoresArr = String(t['VendedoresAsignados'] || '').split(',').map(s => s.trim()).filter(Boolean);
+  const estado = t['Estado'] || 'Pendiente';
+  const esHecha = estado === 'Hecha';
+  const esCancelada = estado === 'Cancelada';
+  const estadoBadgeClass = esHecha ? 'badge-estado-cliente' : (esCancelada ? 'badge-nogeo' : 'badge-normal');
+  const idAttr = String(t['id']).replace(/'/g, "\\'");
+
+  return `
+    <div class="vendor-row">
+      <div class="vendor-row-top">
+        <span class="vendor-row-name">${t['Titulo'] || 'Sin título'}</span>
+        <span class="badge ${estadoBadgeClass}">${estado}</span>
+      </div>
+      <div class="vendor-row-stats">
+        <span>${icon('calendar', 12)} ${fecha}</span>
+        ${vendedoresArr.map(u => `<span>${icon('user', 12)} ${nombreVendedor(u)}</span>`).join('')}
+      </div>
+      ${!esCancelada ? `<div style="margin-top:8px;"><button class="btn-card ${esHecha ? '' : 'btn-next-stage'}" onclick="toggleTareaCompletadaDesdeStats('${idAttr}', ${esHecha ? 'true' : 'false'}, this)">${esHecha ? icon('refresh', 13) + ' Marcar pendiente' : icon('check', 13) + ' Marcar completada'}</button></div>` : ''}
+    </div>`;
+}
+
+async function toggleTareaCompletadaDesdeStats(id, estaHecha, btn) {
+  const original = setBtnLoading(btn, '');
+  try {
+    await apiPost({ action: 'editar_tarea', id, estado: estaHecha ? 'Pendiente' : 'Hecha' });
+    showToast(estaHecha ? 'Tarea marcada como pendiente' : 'Tarea marcada como hecha');
+    await refreshCache(false);
+  } catch {
+    showToast('Error al actualizar.');
+    restoreBtn(btn, original);
+  }
 }
 
 // ==================== MODAL HELPERS ====================
